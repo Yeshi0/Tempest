@@ -103,8 +103,8 @@ for /l %%a in (1,1,!objectCount!) do (
 	echo.    xpos: !obj%%a_xpos! >>memoryDump.txt
 	echo.    ypos: !obj%%a_ypos! >>memoryDump.txt
 	if "!obj%%a_type!"=="viewport" (
-		echo.    viewportBuffer:
-		for /l %%b in (56,-1,1) do echo.      !obj%%a_vpb_l%%b!
+		echo.    viewportBuffer: >>memoryDump.txt
+		for /l %%b in (56,-1,1) do echo.      !obj%%a_vpb_l%%b! >>memoryDump.txt
 	)
 )
 echo. >>memoryDump.txt
