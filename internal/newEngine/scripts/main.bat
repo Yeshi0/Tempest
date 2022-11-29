@@ -447,9 +447,28 @@ for /l %%. in (1,1,2999) do (
 						if "!collisionType!"=="solid" (
 							set /a obj%%a_ypos=ccYpos*8
 							set /a obj%%a_ypos+=1
+							set /a obj%%a_speedY=0
 							set obj%%a_grounded=true
 						)
-						title !ccXpos! - !ccYpos! - !ccDistX! - !ccDistY! - !ccNewXpos! - !ccNewYpos! - !collisionGroupId! - !collisionType!
+
+						rem bottom right collision
+						set /a ccXpos=obj%%a_xpos+6
+						set /a ccXpos/=8
+						set /a ccYpos=obj%%a_ypos+7
+						set /a ccYpos/=8
+						set /a ccCheckX=ccXpos
+						set collisionGroupId=
+						set collisionType=
+						for /f "tokens=1-2 delims= " %%b in ("!ccCheckX! !ccYpos!") do (
+							set collisionGroupId=!lcm_l%%c:~%%b,1!
+							for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
+						)
+						if "!collisionType!"=="solid" (
+							set /a obj%%a_ypos=ccYpos*8
+							set /a obj%%a_ypos+=1
+							set /a obj%%a_speedY=0
+							set obj%%a_grounded=true
+						)
 					)
 
 					if "%%z"=="!ticksToExecute!" (
