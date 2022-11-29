@@ -1,0 +1,1 @@
+createObject player ; type=dummy ; renderInto=viewport ; sprite=placeholder.spr ; xpos=10 ; ypos=20 

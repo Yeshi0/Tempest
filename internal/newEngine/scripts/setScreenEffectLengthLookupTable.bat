@@ -1,0 +1,9 @@
+set /a sll_instant=999
+set /a sll_extremelyShort=60
+set /a sll_veryShort=30
+set /a sll_short=15
+set /a sll_normal=10
+set /a sll_long=5
+set /a sll_veryLong=2
+set /a sll_extremelyLong=1
+exit /b 0

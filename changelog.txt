@@ -1,0 +1,118 @@
+nov 14 2022
+limited random function range from 1 to 32000
+prevented performing math on variables with values outside the range of -1000000000 to 1000000000 (-1 billion, 1 billion)
+tabs are now stripped when loaded in scriptManager.bat. if 2 spaces are present, the script is killed
+increased character limit per line from 99 to 149
+added if equal command
+added killScript function
+optimized variable expansion
+first variable found during variable expansion now has its offset cached
+each line of code may now only have a single variable
+
+nov 17 2022
+fixed "right" alignX property
+variables are now expanded in objectManager.bat
+increased character limit per line from 149 to 200
+character limit per line is now the value of "lineCharLimit"
+fixed a bug where the line length limit was being checked incorrectly
+fixed issues with clicking buttons
+added "if NOT" command when using "if X=" instead of "if =="
+"goto" command now saves the previous line number prior to jumping
+added "gotoReturn" command, used to return to previous line number prior to using "goto"
+the "saveData readValue" function now writes to both "result" and its own variable
+fixed issues with variable expansion
+switched from "dispWaitForFade" to a timer based "skipDisp"
+added ' and # as allowed characters during script safety caching
+implemented "loadGlobalObject" function
+updated getinput (after putting it off for almost a month)
+replaced "keyPressed" input system with "keysPressed"
+fixed issues during init
+implemented "consoleUtils.dll", which prevents window resizing, and automatically sets the font correctly
+
+nov 18 2022
+minor bugfix to 'objectManager.bat'
+added "if value" command when using "if X=" instead of "if ==", used to compare 2 variables
+added "if NOT value" command
+if an "if" condition fails, the interpreter will cache and jump execution to the next closing parenthesis
+"result" variable can now be set manually, but can still be overwritten as usual
+implemented a simpler "setx" command, using space instead of equal
+removed setx, instead, the "set" command will now treat "_" as "="
+
+nov 19 2022
+if the "startScript" function has an extra argument, that argument will be written to the "startArgument" variable, used as a workaround for not allowing multiple commands in a button "onClick" property
+the "startArgument" variable is now cleared every time the "startScript" function is called
+added "raiseHardError" function, completely stops execution and displays debug info. useful if something goes wrong (invalid values, load failures, etc)
+
+nov 21 2022
+fixed a major issue with clicking buttons (this took about 5 hours of trial and error. it sucked)
+whenever a script is killed, "maxScriptCount" will be changed accordingly
+use a set of temp vars sharing names instead of having tens of different temp variables bloating memory usage
+optimized "if" command
+improved parenthesis and skipExec checking, greatly improving performance
+several misc optimizations
+script PIDs are now defragmented whenever a process is killed
+removed "maxScriptCount" variable
+partially implemented "viewport" object
+viewport framebuffers are now included in memory dumps
+fixed an issue where "if" statements failed to execute code within parenthesis
+first word given in "if" statements is now treated as a variable name. new method of comparing a variable to a string is much more performant
+removed V= and VX=
+the "goto" command now jumps to the correct line number
+
+nov 22 2022
+since hashtags can no longer be used as a prefix to a variable name to check if defined, "if varName == NUL" will now be used for checking if defined
+spaces in variable values are now removed automatically
+optimized init
+removed some redundant scripts
+moved contents of initDisp to miscInit
+implemented input checking. the "keyPressed" variable can be set manually, but any "if" operation on it will fail
+when using the "instant" screen effect speed, the new color will be applied immediately, rather than on the next tick
+optimized object management
+implemented "setCurrentScene". this is useful since "loadScene" (different from switchScene) changes "currentScene", preventing scene specific objects from loading
+temporary variables from checkString are now cleared automatically
+
+nov 23 2022
+object OIDs are now defragmented in the same way as script PIDs
+removed checks for trailing spaces, improving performance
+fixed mouseXpos not being aligned properly
+
+nov 24 2022
+fixed a problem with stripping tabs at the start of a line when loading scripts
+optimized "if" command
+whether a line has a math operation is now cached
+the math operation type and value are both now cached
+re-implemented V= and VX=
+fixed killObject function
+implemented getObjectProperty
+implemented modifyObjectProperty
+cleaned several instances of "for" token count in the interpreter
+setting a variables value to "NUL" now undefines the variable
+implemented maxLinesPerFrame" engine property
+moved objectManager functions to engineProperties
+moved less frequently used functions to separate scripts, greatly improving performance yet again
+
+nov 25 2022
+scripts left to cache during init now have their file extensions shown
+removed runtime environment check to scripts which dont need it
+implemented level loading
+implemented level rendering
+implemented loadSprite
+implemented object "sprite" property
+viewports now render on the last tick of a cycle
+fixed object stack prevention with viewport objects
+
+nov 28 2022
+fixed modifyObjectProperty
+implemented focusObject property
+implemented sprite property
+implemented sideScroller player controller logic
+screenEffectLength now uses a lookup table, small performance improvement
+removed fadeToBlack and fadeToNormal screen effects, only numbers are accepted now
+removed most code comments (theyre all just me ranting)
+cleaned up some unused global timers
+implemented objectManager applyKeybinds
+optimized viewport rendering
+finished player sprite rendering
+
+nov 29 2022
+sideScroller player controller improvements

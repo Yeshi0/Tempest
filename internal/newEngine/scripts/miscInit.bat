@@ -1,0 +1,21 @@
+for /l %%a in (1,1,56) do set d%%a=                                                                                        
+set /a objectCount=0
+set /a scriptCount=0
+set /a maxLinesPerFrame=100
+set /a lineCharLimit=200
+set halfRender=false
+set /a debugTitlebar=0
+set /a updateDiscordRpc=9999
+set /a saveTimePlayed=9999
+set /a updateTitle=9999
+set scriptSafetyCacheFinished=false
+set title=Initializing runtime...
+set screenEffect=fadeToNormal
+set screenEffectLength=normal
+set /a screenColor=0
+set /a skipDisp=5
+set /a screenEffectStartingColor=0
+set buttonsDisabled=false
+set staticButtons=true
+set staticText=true
+exit /b 0

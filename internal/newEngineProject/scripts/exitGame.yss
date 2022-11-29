@@ -1,0 +1,3 @@
+screenEffect 0 short 
+waitForEffects 
+exitGame 

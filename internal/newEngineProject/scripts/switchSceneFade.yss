@@ -1,0 +1,13 @@
+if startArgument == NUL (
+	raiseHardError NO_ARGUMENT
+)
+objectManager disableButtons
+
+screenEffect 0 short
+waitForEffects
+
+switchScene $startArgument
+screenEffect 200 short
+waitForEffects
+
+objectManager enableButtons

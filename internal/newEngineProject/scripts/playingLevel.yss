@@ -1,0 +1,31 @@
+engineProperties disableButtons
+screenEffect 0 short
+waitForEffects
+
+set gamePaused=false
+if playLevel == NUL (
+	raiseHardError LEVEL_NAME_UNDEFINED
+)
+loadLevel $playLevel
+if result X= loadedLevel (
+	raiseHardError LEVEL_LOAD_FAILED
+)
+renderLevel $playLevel
+if result X= renderedLevel (
+	raiseHardError LEVEL_RENDER_FAILED
+)
+
+switchScene playingLevel
+set gamePaused=false
+startScript spawnPlayer.yss
+endFrame
+screenEffect 200 short
+waitForEffects
+engineProperties enableButtons
+engineProperties disableStaticButtons
+getObjectProperty player xpos
+set playerXpos=$result
+
+:main
+endFrame
+goto :main

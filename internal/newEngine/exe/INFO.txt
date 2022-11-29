@@ -1,0 +1,28 @@
+chcp.com
+  windows 10 home 64bit chcp.com from system32
+  only included to make sure all non batch stuff is in one place
+  the chcp.com present in the system32 folder is never used
+
+consoleUtils.dll
+  disables window resizing
+  sets the font to raster 8x8
+
+curl.exe [optional]
+  used with the networking api
+
+discordRPC.dll [optional]
+  allows for discord rpc
+
+getinput.dll
+  input dll
+  handles mouse and keyboard
+
+inject.exe
+  injector tool
+  used to inject dlls into the interpreter
+  much more efficient than calling an exe every frame
+
+mode.com
+  windows 10 home 64bit mode.com from system32
+  only included to make sure all non batch stuff is in one place
+  the mode.com present in the system32 folder is never used

@@ -1,0 +1,10 @@
+loadGlobalObject splashText1.yss
+loadGlobalObject splashText2.yss
+
+screenEffect 0 instant
+waitForEffects
+screenEffect 150 normal
+waitForEffects
+
+wait 25
+loadScene postSplash

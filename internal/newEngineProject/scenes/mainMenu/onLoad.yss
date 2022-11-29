@@ -1,0 +1,2 @@
+set playLevel=c1m1.dat
+startScript playingLevel.yss
