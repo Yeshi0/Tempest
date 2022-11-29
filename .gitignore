@@ -1,1 +1,3 @@
 /memoryDump.txt
+/internal/newEngine/cache/*
+/internal/newEngine/temp/*
