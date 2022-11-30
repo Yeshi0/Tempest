@@ -92,41 +92,13 @@ for /l %%. in (1,1,2999) do (
 		)
 	)
 
-	if !skipDisp! GEQ 1 (
-		if NOT "!screenColor!"=="0" set /a skipDisp-=1
-
-	) else (
-		if !dispTimer! GEQ !csPerFrame! (
-			set /a dispTimer-=csPerFrame
-			if !dispTimer! GEQ !csPerFrame! set /a dispTimer=0
-			if "!displayMode!"=="dynamicHalfRenderMode" (
-				set halfRender=false
-				set /a enableDHRM=csPerFrame+1
-				if !globalTdiff! GTR !enableDHRM! set halfRender=true
-			)
-			if "!halfRender!"=="false" (
-				set /a fpsFrames+=1
-				<nul set /p=[1;1H[48;2;!screenColor!;!screenColor!;!screenColor!m
-				set renderLines=56,-1,1
-
-			) else (
-				set /a halfToRender+=1
-				if "!halfToRender!"=="2" set /a halfToRender=0
-				if "!halfToRender!"=="0" (
-					set /a fpsFrames+=1
-					<nul set /p=[29;1H[48;2;!screenColor!;!screenColor!;!screenColor!m
-					set renderLines=28,-1,1
-
-				) else (
-					<nul set /p=[1;1H[48;2;!screenColor!;!screenColor!;!screenColor!m
-					set renderLines=56,-1,29
-				)
-			)
-
-			for /l %%a in (!renderLines!) do (
-				set d=!d%%a:~0,88!
-				echo.!d!
-			)
+	if !dispTimer! GEQ !csPerFrame! (
+		set /a dispTimer-=csPerFrame,fpsFrames+=1
+		if !dispTimer! GEQ !csPerFrame! set /a dispTimer=0
+		<nul set /p=[1;1H[48;2;!screenColor!;!screenColor!;!screenColor!m
+		for /l %%a in (56,-1,1) do (
+			set d=!d%%a:~0,88!
+			echo.!d!
 		)
 	)
 
@@ -157,17 +129,15 @@ for /l %%. in (1,1,2999) do (
 					if !screenEffectStartingColor! GTR !screenEffectTargetColor! (
 						set /a screenColor-=diffPerTick
 						if !screenColor! LEQ !screenEffectTargetColor! (
-							set /a screenColor=screenEffectTargetColor
+							set /a screenColor=screenEffectTargetColor,screenEffectStartingColor=screenColor
 							set screenEffect=
-							set /a screenEffectStartingColor=screenColor
 						)
 					)
 					if !screenEffectStartingColor! LSS !screenEffectTargetColor! (
 						set /a screenColor+=diffPerTick
 						if !screenColor! GEQ !screenEffectTargetColor! (
-							set /a screenColor=screenEffectTargetColor
+							set /a screenColor=screenEffectTargetColor,screenEffectStartingColor=screenColor
 							set screenEffect=
-							set /a screenEffectStartingColor=screenColor
 						)
 					)
 					if "!screenEffectStartingColor!"=="!screenEffectTargetColor!" (
@@ -197,13 +167,11 @@ for /l %%. in (1,1,2999) do (
 						) else (
 							if NOT "!exec!"=="!exec:$=hasVariable!" (
 								if defined pid%%a_vo_l!pid%%a_execLine! (
-									set /a variableOffset=pid%%a_vo_l%%b
-									set /a variableLength=pid%%a_vl_l%%b
+									set /a variableOffset=pid%%a_vo_l%%b,variableLength=pid%%a_vl_l%%b
 									set variableName=!pid%%a_vn_l%%b!
 
 								) else (
-									set /a currentPid=%%a
-									set /a currentLine=%%b
+									set /a currentPid=%%a,currentLine=%%b
 									call newEngine\scripts\variableExpansionCache.bat
 								)
 								set /a variableNameEnd=variableLength+variableOffset+1
@@ -212,8 +180,7 @@ for /l %%. in (1,1,2999) do (
 										set /a rtVar_!variableName!!pid%%a_oc_l%%b!=pid%%a_on_l%%b
 
 									) else if NOT defined pid%%a_cm_l%%b (
-										set /a currentPid=%%a
-										set /a currentLine=%%b
+										set /a currentPid=%%a,currentLine=%%b
 										call newEngine\scripts\variableMathOperationCache.bat
 									)
 									for %%g in (!variableName!) do (
@@ -398,7 +365,7 @@ for /l %%. in (1,1,2999) do (
 								if "!obj%%a_collideSide!"=="bottom" set obj%%a_grounded=true
 								if NOT "!keys:-%%f-=§!"=="!keys!" if "!obj%%a_grounded!"=="true" (
 									set obj%%a_grounded=false
-									set /a obj%%a_speedY=36
+									set /a obj%%a_speedY=40
 								)
 							)
 						)
@@ -433,11 +400,7 @@ for /l %%. in (1,1,2999) do (
 
 					if "!obj%%a_useCollisions!"=="true" (
 						rem bottom left collision
-						set /a ccXpos=obj%%a_xpos+7
-						set /a ccXpos/=8
-						set /a ccYpos=obj%%a_ypos+7
-						set /a ccYpos/=8
-						set /a ccCheckX=ccXpos-1
+						set /a ccXpos=obj%%a_xpos+7,ccXpos/=8,ccYpos=obj%%a_ypos+7,ccYpos/=8,ccCheckX=ccXpos-1
 						set collisionGroupId=
 						set collisionType=
 						for /f "tokens=1-2 delims= " %%b in ("!ccCheckX! !ccYpos!") do (
@@ -445,18 +408,17 @@ for /l %%. in (1,1,2999) do (
 							for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
 						)
 						if "!collisionType!"=="solid" (
-							set /a obj%%a_ypos=ccYpos*8
-							set /a obj%%a_ypos+=1
-							set /a obj%%a_speedY=0
-							set obj%%a_grounded=true
+							set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX-ccSpeedX,ccDistY=obj%%a_ypos-ccDistY-ccSpeedY
+							if !ccDistX! GTR !ccDistY! (
+								set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos+=1,obj%%a_speedX=0
+							) else (
+								set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos+=1,obj%%a_speedY=0
+								set obj%%a_grounded=true
+							)
 						)
 
 						rem bottom right collision
-						set /a ccXpos=obj%%a_xpos+6
-						set /a ccXpos/=8
-						set /a ccYpos=obj%%a_ypos+7
-						set /a ccYpos/=8
-						set /a ccCheckX=ccXpos
+						set /a ccXpos=obj%%a_xpos+6,ccXpos/=8,ccYpos=obj%%a_ypos+7,ccYpos/=8,ccCheckX=ccXpos
 						set collisionGroupId=
 						set collisionType=
 						for /f "tokens=1-2 delims= " %%b in ("!ccCheckX! !ccYpos!") do (
@@ -464,10 +426,20 @@ for /l %%. in (1,1,2999) do (
 							for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
 						)
 						if "!collisionType!"=="solid" (
-							set /a obj%%a_ypos=ccYpos*8
-							set /a obj%%a_ypos+=1
-							set /a obj%%a_speedY=0
-							set obj%%a_grounded=true
+							set /a ccSpeedX=obj%%a_speedX/8
+							set /a ccSpeedY=obj%%a_speedY/6
+							set /a ccDistX=ccXpos*8
+							set /a ccDistY=ccYpos*8
+							set /a ccDistX=obj%%a_xpos-ccDistX+1-obj%%a_speedX
+							set /a ccDistX=-6-ccDistX
+							set /a ccDistY=obj%%a_ypos-ccDistY+1-obj%%a_speedY
+							title !ccDistX!, !ccDistY!
+							if !ccDistX! GTR !ccDistY! (
+								set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos-=7,obj%%a_speedX=0
+							) else (
+								set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos+=1,obj%%a_speedY=0
+								set obj%%a_grounded=true
+							)
 						)
 					)
 

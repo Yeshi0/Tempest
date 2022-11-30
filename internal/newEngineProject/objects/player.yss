@@ -1,1 +1,1 @@
-createObject player ; type=dummy ; renderInto=viewport ; sprite=placeholder.spr ; xpos=20 ; ypos=10 
+createObject player ; type=dummy ; renderInto=viewport ; sprite=placeholder.spr ; xpos=20 ; ypos=7 
