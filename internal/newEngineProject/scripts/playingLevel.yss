@@ -27,5 +27,6 @@ getObjectProperty player xpos
 set playerXpos=$result
 
 :main
+exit
 endFrame
 goto :main
