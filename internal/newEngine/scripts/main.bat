@@ -397,6 +397,7 @@ for /l %%. in (1,1,2999) do (
 					)
 
 					if "!obj%%a_useCollisions!"=="true" (
+						set obj%%a_grounded=false
 						rem bottom left collision
 						set /a ccXpos=obj%%a_xpos+7,ccXpos/=8,ccYpos=obj%%a_ypos+7,ccYpos/=8,ccCheckX=ccXpos-1
 						set collisionGroupId=
@@ -424,13 +425,7 @@ for /l %%. in (1,1,2999) do (
 							for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
 						)
 						if "!collisionType!"=="solid" (
-							set /a ccSpeedX=obj%%a_speedX/8
-							set /a ccSpeedY=obj%%a_speedY/6
-							set /a ccDistX=ccXpos*8
-							set /a ccDistY=ccYpos*8
-							set /a ccDistX=obj%%a_xpos-ccDistX+1-obj%%a_speedX
-							set /a ccDistX=-6-ccDistX
-							set /a ccDistY=obj%%a_ypos-ccDistY+1-obj%%a_speedY
+							set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX+1-obj%%a_speedX,ccDistX=-6-ccDistX,ccDistY=obj%%a_ypos-ccDistY+1-obj%%a_speedY
 							if !ccDistX! GTR !ccDistY! (
 								set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos-=7,obj%%a_speedX=0
 							) else (
@@ -444,16 +439,9 @@ for /l %%. in (1,1,2999) do (
 						set /a num1=-1
 						for /l %%b in (1,1,!objectCount!) do if "!obj%%b_name!"=="!obj%%a_renderInto!" if "!obj%%b_type!"=="viewport" set /a num1=%%b
 						if NOT "!num1!"=="-1" (
-							set /a num2=obj%%a_xpos-obj!num1!_viewXpos+1
-							set /a num3=obj%%a_ypos-obj!num1!_viewYpos+1
-							set /a num4=num3+7
-							set /a num5=0
-							set /a num6=num2-1
-							set /a num7=num6+8
+							set /a num2=obj%%a_xpos-obj!num1!_viewXpos+1,num3=obj%%a_ypos-obj!num1!_viewYpos+1,num4=num3+7,num5=0,num6=num2-1,num7=num6+8
 							for /l %%b in (!num3!,1,!num4!) do (
-								set /a num5+=1
-								set /a num8=num5*8-8
-								set /a num8=obj!num1!_height-num8
+								set /a num5+=1,num8=num5*8-8,num8=obj!num1!_height-num8
 								for /f "tokens=1-5 delims= " %%c in ("!num6! !num5! !num7! !num1! !num8!") do (
 									set d%%b=!d%%b:~0,%%c!!obj%%a_spriteContent:~%%g,8!!d%%b:~%%e!
 								)
