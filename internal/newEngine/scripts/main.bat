@@ -456,7 +456,7 @@ for /l %%. in (1,1,2999) do (
 								set /a num6=num2-1
 								set /a num7=num6+8
 								set /a num8=num5*8-8
-								set /a num8=56-num8
+								set /a num8=obj!num1!_height-num8
 								for /f "tokens=1-5 delims= " %%c in ("!num6! !num5! !num7! !num1! !num8!") do (
 									set d%%b=!d%%b:~0,%%c!!obj%%a_spriteContent:~%%g,8!!d%%b:~%%e!
 								)
@@ -475,6 +475,10 @@ for /l %%. in (1,1,2999) do (
 							set /a obj%%a_viewYpos=obj!num1!_ypos-num2+4
 							if !obj%%a_viewXpos! LEQ 1 set /a obj%%a_viewXpos=1
 							if !obj%%a_viewYpos! LEQ 1 set /a obj%%a_viewYpos=1
+							set /a num2=levelEndX-obj%%a_width+1
+							if !obj%%a_viewXpos! GEQ !num2! set /a obj%%a_viewXpos=num2
+							set /a num2=levelEndY-obj%%a_height+1
+							if !obj%%a_viewYpos! GEQ !num2! set /a obj%%a_viewYpos=num2
 						)
 
 						set /a num1=obj%%a_ypos+obj%%a_height-1

@@ -12,6 +12,8 @@ for /f "tokens=1-4 delims=: " %%a in (newEngineProject\!string1!) do (
 	rem theyre required for stopping viewports from scrolling past the level
 	if %%c GEQ !levelSizeX! set /a levelSizeX=%%c
 	if %%d GEQ !levelSizeY! set /a levelSizeY=%%d
+	set /a levelEndX=levelSizeX*8
+	set /a levelEndY=levelSizeY*8
 )
 
 if !levelSizeX! GEQ 1000 exit /b 1

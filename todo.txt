@@ -19,3 +19,4 @@ fix math AGAIN
 only allow numbers in xpos/ypos
 viewport lags behind focused objects
 fix viewports
+prevent creating viewports if no level is loaded
