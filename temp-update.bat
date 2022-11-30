@@ -20,8 +20,10 @@ echo.Updating...
 for /f "tokens=1 delims=" %%a in ('curl -kL https://raw.githubusercontent.com/Yeshi0/Tempest/master/fileList 2^>nul') do (
 	echo.Updating "%%a"...
 	if NOT "%%a"=="temp-update.bat" (
-		if exist %%a del %%a
-		curl -kL https://raw.githubusercontent.com/Yeshi0/Tempest/master/%%a -o %%a -s
+		rem if exist %%a del %%a
+		set getCurrent=%%a
+		set getCurrent=!getCurrent:/=\!
+		curl -kL https://raw.githubusercontent.com/Yeshi0/Tempest/master/!getCurrent! -o %%a -s
 
 	) else echo.Cannot self-update, skipping... ^(ignore this message^)
 )
