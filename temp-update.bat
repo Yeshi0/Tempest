@@ -19,7 +19,7 @@ echo.Updating...
 
 for /f "tokens=1 delims=" %%a in ('curl -kL https://raw.githubusercontent.com/Yeshi0/Tempest/master/fileList 2^>nul') do (
 	echo.Updating "%%a"...
-	if "%%a"=="temp-update.bat" (
+	if NOT "%%a"=="temp-update.bat" (
 		if exist %%a del %%a
 		curl -kL https://raw.githubusercontent.com/Yeshi0/Tempest/master/ -o %%a 2^>nul
 
