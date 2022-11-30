@@ -267,9 +267,7 @@ for /l %%. in (1,1,2999) do (
 									) else call newEngine\scripts\gotoCache.bat
 									if NOT "!gotoLine!"=="-1" (
 										set pid%%a_skipUntilParenthesis=false
-										set /a pid%%a_gotoReturn=pid%%a_execLine
-										set /a pid%%a_execLine=gotoLine
-										set /a pid%%a_sleepTicks=1
+										set /a pid%%a_gotoReturn=pid%%a_execLine,pid%%a_execLine=gotoLine,pid%%a_sleepTicks=1
 									)
 
 								) else if "%%c"=="gotoReturn" (
@@ -451,10 +449,10 @@ for /l %%. in (1,1,2999) do (
 							set /a num3=obj%%a_ypos-obj!num1!_viewYpos+1
 							set /a num4=num3+7
 							set /a num5=0
+							set /a num6=num2-1
+							set /a num7=num6+8
 							for /l %%b in (!num3!,1,!num4!) do (
 								set /a num5+=1
-								set /a num6=num2-1
-								set /a num7=num6+8
 								set /a num8=num5*8-8
 								set /a num8=obj!num1!_height-num8
 								for /f "tokens=1-5 delims= " %%c in ("!num6! !num5! !num7! !num1! !num8!") do (
@@ -469,10 +467,7 @@ for /l %%. in (1,1,2999) do (
 						set /a num1=-1
 						for /l %%b in (1,1,!objectCount!) do if "!obj%%b_name!"=="!obj%%a_focusObject!" set /a num1=%%b
 						if NOT "!num1!"=="-1" (
-							set /a num2=obj%%a_width/2
-							set /a obj%%a_viewXpos=obj!num1!_xpos-num2+4
-							set /a num2=obj%%a_height/2
-							set /a obj%%a_viewYpos=obj!num1!_ypos-num2+4
+							set /a num2=obj%%a_width/2,obj%%a_viewXpos=obj!num1!_xpos-num2+4,num2=obj%%a_height/2,obj%%a_viewYpos=obj!num1!_ypos-num2+4
 							if !obj%%a_viewXpos! LEQ 1 set /a obj%%a_viewXpos=1
 							if !obj%%a_viewYpos! LEQ 1 set /a obj%%a_viewYpos=1
 							set /a num2=levelEndX-obj%%a_width+1
@@ -481,12 +476,7 @@ for /l %%. in (1,1,2999) do (
 							if !obj%%a_viewYpos! GEQ !num2! set /a obj%%a_viewYpos=num2
 						)
 
-						set /a num1=obj%%a_ypos+obj%%a_height-1
-						set /a num2=obj%%a_xpos-1
-						set /a num3=obj%%a_width
-						set /a num4=88-num2-num3
-						set /a num4=88-num4
-						set /a num5=obj%%a_viewXpos-1
+						set /a num1=obj%%a_ypos+obj%%a_height-1,num2=obj%%a_xpos-1,num3=obj%%a_width,num4=88-num2-num3,num4=88-num4,num5=obj%%a_viewXpos-1
 						for /f "tokens=1-4 delims= " %%c in ("!num2! !num3! !num4! !num5!") do for /l %%b in (!obj%%a_ypos!,1,!num1!) do (
 							set /a num6=%%b+obj%%a_viewYpos-1
 							for %%g in (!num6!) do set d%%b=!d%%b:~0,%%c!!lrb_l%%g:~%%f,%%d!!d%%b:~%%e!
