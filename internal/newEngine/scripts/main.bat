@@ -431,7 +431,6 @@ for /l %%. in (1,1,2999) do (
 							set /a ccDistX=obj%%a_xpos-ccDistX+1-obj%%a_speedX
 							set /a ccDistX=-6-ccDistX
 							set /a ccDistY=obj%%a_ypos-ccDistY+1-obj%%a_speedY
-							title !ccDistX!, !ccDistY!
 							if !ccDistX! GTR !ccDistY! (
 								set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos-=7,obj%%a_speedX=0
 							) else (
