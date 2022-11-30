@@ -21,7 +21,7 @@ for /f "tokens=1 delims=" %%a in ('curl -kL https://raw.githubusercontent.com/Ye
 	echo.Updating "%%a"...
 	if NOT "%%a"=="temp-update.bat" (
 		if exist %%a del %%a
-		curl -kL https://raw.githubusercontent.com/Yeshi0/Tempest/master/ -o %%a -s
+		curl -kL https://raw.githubusercontent.com/Yeshi0/Tempest/master/%%a -o %%a -s
 
 	) else echo.Cannot self-update, skipping... ^(ignore this message^)
 )
