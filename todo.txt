@@ -22,3 +22,4 @@ fix viewports
 prevent creating viewports if no level is loaded
 fix walljumping
 right wall collision is broken
+convert all spaces to tabs (thanks vscode for automatically choosing the inferior indentation character)
