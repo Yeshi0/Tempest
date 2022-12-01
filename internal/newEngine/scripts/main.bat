@@ -407,30 +407,50 @@ for /l %%. in (1,1,2999) do (
 							for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
 						)
 						if "!collisionType!"=="solid" (
-							set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX-ccSpeedX,ccDistY=obj%%a_ypos-ccDistY-ccSpeedY
+							set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX-1-ccSpeedX,ccDistY=obj%%a_ypos+1-ccDistY-ccSpeedY
 							if !ccDistX! GTR !ccDistY! (
 								set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos+=1,obj%%a_speedX=0
-							) else (
+							)
+							if !ccDistX! LEQ !ccDistY! (
 								set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos+=1,obj%%a_speedY=0
 								set obj%%a_grounded=true
 							)
 						)
 
 						rem bottom right collision
-						set /a ccXpos=obj%%a_xpos+6,ccXpos/=8,ccYpos=obj%%a_ypos+7,ccYpos/=8,ccCheckX=ccXpos
+						set /a ccXpos=obj%%a_xpos+6,ccXpos/=8,ccYpos=obj%%a_ypos+7,ccYpos/=8
 						set collisionGroupId=
 						set collisionType=
-						for /f "tokens=1-2 delims= " %%b in ("!ccCheckX! !ccYpos!") do (
+						for /f "tokens=1-2 delims= " %%b in ("!ccXpos! !ccYpos!") do (
 							set collisionGroupId=!lcm_l%%c:~%%b,1!
 							for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
 						)
 						if "!collisionType!"=="solid" (
-							set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX+1-obj%%a_speedX,ccDistX=-6-ccDistX,ccDistY=obj%%a_ypos-ccDistY+1-obj%%a_speedY
+							set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX+1-obj%%a_speedX,ccDistX=-6-ccDistX,ccDistY=obj%%a_ypos-ccDistY+1-obj%%a_speedY-2
 							if !ccDistX! GTR !ccDistY! (
 								set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos-=7,obj%%a_speedX=0
-							) else (
+							)
+							if !ccDistX! LEQ !ccDistY! (
 								set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos+=1,obj%%a_speedY=0
 								set obj%%a_grounded=true
+							)
+						)
+
+						rem top left collision
+						set /a ccXpos=obj%%a_xpos+7,ccXpos/=8,ccYpos=obj%%a_ypos+7,ccYpos/=8,ccCheckX=ccXpos-1,ccCheckY=ccYpos+1
+						set collisionGroupId=
+						set collisionType=
+						for /f "tokens=1-2 delims= " %%b in ("!ccCheckX! !ccCheckY!") do (
+							set collisionGroupId=!lcm_l%%c:~%%b,1!
+							for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
+						)
+						if "!collisionType!"=="solid" (
+							set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX-ccSpeedX,ccDistY=obj%%a_ypos-ccDistY-ccSpeedY,ccDistY=-6-ccDistY
+							if !ccDistX! GTR !ccDistY! (
+								set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos+=1,obj%%a_speedX=0
+							)
+							if !ccDistX! LEQ !ccDistY! (
+								set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos-=7,obj%%a_speedY=-3
 							)
 						)
 					)
