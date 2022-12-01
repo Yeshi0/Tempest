@@ -376,8 +376,8 @@ for /l %%. in (1,1,2999) do (
 							if defined keys set string1=false
 							if NOT "!keys:-%%d-=§!!keys:-%%e-=§!"=="!keys!!keyS!" set string1=true
 							if "!string1!"=="true" (
-								if !obj%%a_speedX! LEQ -1 set /a obj%%a_speedX+=1
-								if !obj%%a_speedX! GEQ 1 set /a obj%%a_speedX-=1
+								if !obj%%a_speedX! LEQ -1 set /a obj%%a_speedX+=2
+								if !obj%%a_speedX! GEQ 1 set /a obj%%a_speedX-=2
 							)
 
 						) else set /a obj%%a_decreaseSpeedX=0
@@ -408,6 +408,7 @@ for /l %%. in (1,1,2999) do (
 						)
 						if "!collisionType!"=="solid" (
 							set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX-1-ccSpeedX,ccDistY=obj%%a_ypos+1-ccDistY-ccSpeedY
+							title !ccDistX!, !ccDistY!
 							if !ccDistX! GTR !ccDistY! (
 								set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos+=1,obj%%a_speedX=0
 							)
@@ -437,7 +438,7 @@ for /l %%. in (1,1,2999) do (
 						)
 
 						rem top left collision
-						set /a ccXpos=obj%%a_xpos+7,ccXpos/=8,ccYpos=obj%%a_ypos+7,ccYpos/=8,ccCheckX=ccXpos-1,ccCheckY=ccYpos+1
+						set /a ccXpos=obj%%a_xpos+7,ccXpos/=8,ccYpos=obj%%a_ypos+6,ccYpos/=8,ccCheckX=ccXpos-1,ccCheckY=ccYpos+1
 						set collisionGroupId=
 						set collisionType=
 						for /f "tokens=1-2 delims= " %%b in ("!ccCheckX! !ccCheckY!") do (
@@ -453,6 +454,7 @@ for /l %%. in (1,1,2999) do (
 								set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos-=7,obj%%a_speedY=-3
 							)
 						)
+
 					)
 
 					if "%%z"=="!ticksToExecute!" (
