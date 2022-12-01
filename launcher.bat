@@ -7,5 +7,5 @@ if defined wt_session (
 	exit /b 0 
 ) 
 cd internal 
-call newEngine\scripts\main.bat 
+call newEngine\scripts\main.bat %* 
 exit /b %errorLevel% 

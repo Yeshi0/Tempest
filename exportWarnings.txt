@@ -1,3 +1,0 @@
-if 2 "screenEffect" commands are next to eachother, the first one wont be played
-warn if an object is under a viewport
-replace VAR == $VAR with VAR V= VAR

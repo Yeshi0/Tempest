@@ -33,7 +33,6 @@ goto :halt
 set neRuntimeEnv=true
 call newEngine\scripts\init.bat
 set title=NewEngine Runtime
-
 set /a debugTitlebar=1
 
 :main
@@ -397,6 +396,7 @@ for /l %%. in (1,1,2999) do (
 					)
 
 					if "!obj%%a_useCollisions!"=="true" (
+						set obj%%a_collisionList=
 						set obj%%a_grounded=false
 						rem bottom left collision
 						set /a ccXpos=obj%%a_xpos+7,ccXpos/=8,ccYpos=obj%%a_ypos+7,ccYpos/=8,ccCheckX=ccXpos-1
@@ -406,13 +406,13 @@ for /l %%. in (1,1,2999) do (
 							set collisionGroupId=!lcm_l%%c:~%%b,1!
 							for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
 						)
+						if defined collisionType set obj%%a_collisionList=!collisionType! !obj%%a_collisionList!
 						if "!collisionType!"=="solid" (
 							set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX-1-ccSpeedX,ccDistY=obj%%a_ypos+1-ccDistY-ccSpeedY
-							title !ccDistX!, !ccDistY!
 							if !ccDistX! GTR !ccDistY! (
 								set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos+=1,obj%%a_speedX=0
 							)
-							if !ccDistX! LEQ !ccDistY! (
+							if !ccDistX! LSS !ccDistY! (
 								set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos+=1,obj%%a_speedY=0
 								set obj%%a_grounded=true
 							)
@@ -426,12 +426,13 @@ for /l %%. in (1,1,2999) do (
 							set collisionGroupId=!lcm_l%%c:~%%b,1!
 							for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
 						)
+						if defined collisionType set obj%%a_collisionList=!collisionType! !obj%%a_collisionList!
 						if "!collisionType!"=="solid" (
 							set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX+1-obj%%a_speedX,ccDistX=-6-ccDistX,ccDistY=obj%%a_ypos-ccDistY+1-obj%%a_speedY-2
-							if !ccDistX! GTR !ccDistY! (
+							if !ccDistX! GEQ !ccDistY! (
 								set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos-=7,obj%%a_speedX=0
 							)
-							if !ccDistX! LEQ !ccDistY! (
+							if !ccDistX! LSS !ccDistY! (
 								set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos+=1,obj%%a_speedY=0
 								set obj%%a_grounded=true
 							)
@@ -445,17 +446,22 @@ for /l %%. in (1,1,2999) do (
 							set collisionGroupId=!lcm_l%%c:~%%b,1!
 							for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
 						)
+						if defined collisionType set obj%%a_collisionList=!collisionType! !obj%%a_collisionList!
 						if "!collisionType!"=="solid" (
 							set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX-ccSpeedX,ccDistY=obj%%a_ypos-ccDistY-ccSpeedY,ccDistY=-6-ccDistY
 							if !ccDistX! GTR !ccDistY! (
 								set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos+=1,obj%%a_speedX=0
 							)
-							if !ccDistX! LEQ !ccDistY! (
-								set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos-=7,obj%%a_speedY=-3
+							if !ccDistX! LSS !ccDistY! (
+								set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos-=7,obj%%a_speedY=0
 							)
 						)
 
+						rem top right collision
+						rem do this
 					)
+
+					title !obj%%a_collisionList!
 
 					if "%%z"=="!ticksToExecute!" (
 						set /a num1=-1
@@ -477,12 +483,18 @@ for /l %%. in (1,1,2999) do (
 						for /l %%b in (1,1,!objectCount!) do if "!obj%%b_name!"=="!obj%%a_focusObject!" set /a num1=%%b
 						if NOT "!num1!"=="-1" (
 							set /a num2=obj%%a_width/2,obj%%a_viewXpos=obj!num1!_xpos-num2+4,num2=obj%%a_height/2,obj%%a_viewYpos=obj!num1!_ypos-num2+4
-							if !obj%%a_viewXpos! LEQ 1 set /a obj%%a_viewXpos=1
-							if !obj%%a_viewYpos! LEQ 1 set /a obj%%a_viewYpos=1
-							set /a num2=levelEndX-obj%%a_width+1
-							if !obj%%a_viewXpos! GEQ !num2! set /a obj%%a_viewXpos=num2
-							set /a num2=levelEndY-obj%%a_height+1
-							if !obj%%a_viewYpos! GEQ !num2! set /a obj%%a_viewYpos=num2
+							if !obj%%a_viewXpos! LEQ 1 (
+								set /a obj%%a_viewXpos=1
+							) else (
+								set /a num2=levelEndX-obj%%a_width+1
+								if !obj%%a_viewXpos! GEQ !num2! set /a obj%%a_viewXpos=num2
+							)
+							if !obj%%a_viewYpos! LEQ 1 (
+								set /a obj%%a_viewYpos=1
+							) else (
+								set /a num2=levelEndY-obj%%a_height+1
+								if !obj%%a_viewYpos! GEQ !num2! set /a obj%%a_viewYpos=num2
+							)
 						)
 
 						set /a num1=obj%%a_ypos+obj%%a_height-1,num2=obj%%a_xpos-1,num3=obj%%a_width,num4=88-num2-num3,num4=88-num4,num5=obj%%a_viewXpos-1

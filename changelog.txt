@@ -124,3 +124,6 @@ added a simple update script
 
 dec 1 2022
 removed empty viewport buffers on object creation
+launcher.bat now passes arguments to main.bat
+fixed broken hitboxes with the sideScroller player controller
+implemented top left collision
