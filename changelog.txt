@@ -116,3 +116,11 @@ finished player sprite rendering
 
 nov 29 2022
 sideScroller player controller improvements
+
+nov 30 2022
+implemented bottom left and bottom right object tile collision
+fixed player rendering in viewports
+added a simple update script
+
+dec 1 2022
+removed empty viewport buffers on object creation

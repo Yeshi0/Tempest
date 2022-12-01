@@ -206,7 +206,6 @@ if "%1"=="loadObject" (
 				set /a obj!newId!_endXpos=newEndXpos
 				set /a obj!newId!_endYpos=newEndYpos
 				set obj!newId!_focusObject=!newProperty_focusObject!
-				for /l %%m in (1,1,56) do set obj!newid!_vpb_l%%m=                                                                                        
 			)
 			if "!newProperty_type!"=="dummy" (
 				set /a obj!newId!_xpos=newProperty_xpos
