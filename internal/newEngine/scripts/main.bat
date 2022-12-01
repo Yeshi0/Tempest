@@ -92,13 +92,41 @@ for /l %%. in (1,1,2999) do (
 		)
 	)
 
-	if !dispTimer! GEQ !csPerFrame! (
-		set /a dispTimer-=csPerFrame,fpsFrames+=1
-		if !dispTimer! GEQ !csPerFrame! set /a dispTimer=0
-		<nul set /p=[1;1H[48;2;!screenColor!;!screenColor!;!screenColor!m
-		for /l %%a in (56,-1,1) do (
-			set d=!d%%a:~0,88!
-			echo.!d!
+	if !skipDisp! GEQ 1 (
+		if NOT "!screenColor!"=="0" set /a skipDisp-=1
+
+	) else (
+		if !dispTimer! GEQ !csPerFrame! (
+			set /a dispTimer-=csPerFrame
+			if !dispTimer! GEQ !csPerFrame! set /a dispTimer=0
+			if "!displayMode!"=="dynamicHalfRenderMode" (
+				set halfRender=false
+				set /a enableDHRM=csPerFrame+1
+				if !globalTdiff! GTR !enableDHRM! set halfRender=true
+			)
+			if "!halfRender!"=="false" (
+				set /a fpsFrames+=1
+				<nul set /p=[1;1H[48;2;!screenColor!;!screenColor!;!screenColor!m
+				set renderLines=56,-1,1
+
+			) else (
+				set /a halfToRender+=1
+				if "!halfToRender!"=="2" set /a halfToRender=0
+				if "!halfToRender!"=="0" (
+					set /a fpsFrames+=1
+					<nul set /p=[29;1H[48;2;!screenColor!;!screenColor!;!screenColor!m
+					set renderLines=28,-1,1
+
+				) else (
+					<nul set /p=[1;1H[48;2;!screenColor!;!screenColor!;!screenColor!m
+					set renderLines=56,-1,29
+				)
+			)
+
+			for /l %%a in (!renderLines!) do (
+				set d=!d%%a:~0,88!
+				echo.!d!
+			)
 		)
 	)
 
@@ -129,15 +157,17 @@ for /l %%. in (1,1,2999) do (
 					if !screenEffectStartingColor! GTR !screenEffectTargetColor! (
 						set /a screenColor-=diffPerTick
 						if !screenColor! LEQ !screenEffectTargetColor! (
-							set /a screenColor=screenEffectTargetColor,screenEffectStartingColor=screenColor
+							set /a screenColor=screenEffectTargetColor
 							set screenEffect=
+							set /a screenEffectStartingColor=screenColor
 						)
 					)
 					if !screenEffectStartingColor! LSS !screenEffectTargetColor! (
 						set /a screenColor+=diffPerTick
 						if !screenColor! GEQ !screenEffectTargetColor! (
-							set /a screenColor=screenEffectTargetColor,screenEffectStartingColor=screenColor
+							set /a screenColor=screenEffectTargetColor
 							set screenEffect=
+							set /a screenEffectStartingColor=screenColor
 						)
 					)
 					if "!screenEffectStartingColor!"=="!screenEffectTargetColor!" (
@@ -167,11 +197,13 @@ for /l %%. in (1,1,2999) do (
 						) else (
 							if NOT "!exec!"=="!exec:$=hasVariable!" (
 								if defined pid%%a_vo_l!pid%%a_execLine! (
-									set /a variableOffset=pid%%a_vo_l%%b,variableLength=pid%%a_vl_l%%b
+									set /a variableOffset=pid%%a_vo_l%%b
+									set /a variableLength=pid%%a_vl_l%%b
 									set variableName=!pid%%a_vn_l%%b!
 
 								) else (
-									set /a currentPid=%%a,currentLine=%%b
+									set /a currentPid=%%a
+									set /a currentLine=%%b
 									call newEngine\scripts\variableExpansionCache.bat
 								)
 								set /a variableNameEnd=variableLength+variableOffset+1
@@ -180,7 +212,8 @@ for /l %%. in (1,1,2999) do (
 										set /a rtVar_!variableName!!pid%%a_oc_l%%b!=pid%%a_on_l%%b
 
 									) else if NOT defined pid%%a_cm_l%%b (
-										set /a currentPid=%%a,currentLine=%%b
+										set /a currentPid=%%a
+										set /a currentLine=%%b
 										call newEngine\scripts\variableMathOperationCache.bat
 									)
 									for %%g in (!variableName!) do (
@@ -267,7 +300,9 @@ for /l %%. in (1,1,2999) do (
 									) else call newEngine\scripts\gotoCache.bat
 									if NOT "!gotoLine!"=="-1" (
 										set pid%%a_skipUntilParenthesis=false
-										set /a pid%%a_gotoReturn=pid%%a_execLine,pid%%a_execLine=gotoLine,pid%%a_sleepTicks=1
+										set /a pid%%a_gotoReturn=pid%%a_execLine
+										set /a pid%%a_execLine=gotoLine
+										set /a pid%%a_sleepTicks=1
 									)
 
 								) else if "%%c"=="gotoReturn" (
@@ -363,7 +398,7 @@ for /l %%. in (1,1,2999) do (
 								if "!obj%%a_collideSide!"=="bottom" set obj%%a_grounded=true
 								if NOT "!keys:-%%f-=§!"=="!keys!" if "!obj%%a_grounded!"=="true" (
 									set obj%%a_grounded=false
-									set /a obj%%a_speedY=40
+									set /a obj%%a_speedY=36
 								)
 							)
 						)
@@ -397,9 +432,12 @@ for /l %%. in (1,1,2999) do (
 					)
 
 					if "!obj%%a_useCollisions!"=="true" (
-						set obj%%a_grounded=false
 						rem bottom left collision
-						set /a ccXpos=obj%%a_xpos+7,ccXpos/=8,ccYpos=obj%%a_ypos+7,ccYpos/=8,ccCheckX=ccXpos-1
+						set /a ccXpos=obj%%a_xpos+7
+						set /a ccXpos/=8
+						set /a ccYpos=obj%%a_ypos+7
+						set /a ccYpos/=8
+						set /a ccCheckX=ccXpos-1
 						set collisionGroupId=
 						set collisionType=
 						for /f "tokens=1-2 delims= " %%b in ("!ccCheckX! !ccYpos!") do (
@@ -407,17 +445,18 @@ for /l %%. in (1,1,2999) do (
 							for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
 						)
 						if "!collisionType!"=="solid" (
-							set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX-ccSpeedX,ccDistY=obj%%a_ypos-ccDistY-ccSpeedY
-							if !ccDistX! GTR !ccDistY! (
-								set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos+=1,obj%%a_speedX=0
-							) else (
-								set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos+=1,obj%%a_speedY=0
-								set obj%%a_grounded=true
-							)
+							set /a obj%%a_ypos=ccYpos*8
+							set /a obj%%a_ypos+=1
+							set /a obj%%a_speedY=0
+							set obj%%a_grounded=true
 						)
 
 						rem bottom right collision
-						set /a ccXpos=obj%%a_xpos+6,ccXpos/=8,ccYpos=obj%%a_ypos+7,ccYpos/=8,ccCheckX=ccXpos
+						set /a ccXpos=obj%%a_xpos+6
+						set /a ccXpos/=8
+						set /a ccYpos=obj%%a_ypos+7
+						set /a ccYpos/=8
+						set /a ccCheckX=ccXpos
 						set collisionGroupId=
 						set collisionType=
 						for /f "tokens=1-2 delims= " %%b in ("!ccCheckX! !ccYpos!") do (
@@ -425,13 +464,10 @@ for /l %%. in (1,1,2999) do (
 							for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
 						)
 						if "!collisionType!"=="solid" (
-							set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX+1-obj%%a_speedX,ccDistX=-6-ccDistX,ccDistY=obj%%a_ypos-ccDistY+1-obj%%a_speedY
-							if !ccDistX! GTR !ccDistY! (
-								set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos-=7,obj%%a_speedX=0
-							) else (
-								set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos+=1,obj%%a_speedY=0
-								set obj%%a_grounded=true
-							)
+							set /a obj%%a_ypos=ccYpos*8
+							set /a obj%%a_ypos+=1
+							set /a obj%%a_speedY=0
+							set obj%%a_grounded=true
 						)
 					)
 
@@ -439,9 +475,16 @@ for /l %%. in (1,1,2999) do (
 						set /a num1=-1
 						for /l %%b in (1,1,!objectCount!) do if "!obj%%b_name!"=="!obj%%a_renderInto!" if "!obj%%b_type!"=="viewport" set /a num1=%%b
 						if NOT "!num1!"=="-1" (
-							set /a num2=obj%%a_xpos-obj!num1!_viewXpos+1,num3=obj%%a_ypos-obj!num1!_viewYpos+1,num4=num3+7,num5=0,num6=num2-1,num7=num6+8
+							set /a num2=obj%%a_xpos-obj!num1!_viewXpos+1
+							set /a num3=obj%%a_ypos-obj!num1!_viewYpos+1
+							set /a num4=num3+7
+							set /a num5=0
 							for /l %%b in (!num3!,1,!num4!) do (
-								set /a num5+=1,num8=num5*8-8,num8=obj!num1!_height-num8
+								set /a num5+=1
+								set /a num6=num2-1
+								set /a num7=num6+8
+								set /a num8=num5*8-8
+								set /a num8=56-num8
 								for /f "tokens=1-5 delims= " %%c in ("!num6! !num5! !num7! !num1! !num8!") do (
 									set d%%b=!d%%b:~0,%%c!!obj%%a_spriteContent:~%%g,8!!d%%b:~%%e!
 								)
@@ -454,16 +497,20 @@ for /l %%. in (1,1,2999) do (
 						set /a num1=-1
 						for /l %%b in (1,1,!objectCount!) do if "!obj%%b_name!"=="!obj%%a_focusObject!" set /a num1=%%b
 						if NOT "!num1!"=="-1" (
-							set /a num2=obj%%a_width/2,obj%%a_viewXpos=obj!num1!_xpos-num2+4,num2=obj%%a_height/2,obj%%a_viewYpos=obj!num1!_ypos-num2+4
+							set /a num2=obj%%a_width/2
+							set /a obj%%a_viewXpos=obj!num1!_xpos-num2+4
+							set /a num2=obj%%a_height/2
+							set /a obj%%a_viewYpos=obj!num1!_ypos-num2+4
 							if !obj%%a_viewXpos! LEQ 1 set /a obj%%a_viewXpos=1
 							if !obj%%a_viewYpos! LEQ 1 set /a obj%%a_viewYpos=1
-							set /a num2=levelEndX-obj%%a_width+1
-							if !obj%%a_viewXpos! GEQ !num2! set /a obj%%a_viewXpos=num2
-							set /a num2=levelEndY-obj%%a_height+1
-							if !obj%%a_viewYpos! GEQ !num2! set /a obj%%a_viewYpos=num2
 						)
 
-						set /a num1=obj%%a_ypos+obj%%a_height-1,num2=obj%%a_xpos-1,num3=obj%%a_width,num4=88-num2-num3,num4=88-num4,num5=obj%%a_viewXpos-1
+						set /a num1=obj%%a_ypos+obj%%a_height-1
+						set /a num2=obj%%a_xpos-1
+						set /a num3=obj%%a_width
+						set /a num4=88-num2-num3
+						set /a num4=88-num4
+						set /a num5=obj%%a_viewXpos-1
 						for /f "tokens=1-4 delims= " %%c in ("!num2! !num3! !num4! !num5!") do for /l %%b in (!obj%%a_ypos!,1,!num1!) do (
 							set /a num6=%%b+obj%%a_viewYpos-1
 							for %%g in (!num6!) do set d%%b=!d%%b:~0,%%c!!lrb_l%%g:~%%f,%%d!!d%%b:~%%e!

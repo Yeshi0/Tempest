@@ -14,7 +14,3 @@ for %%a in (
     internal\newEngine\fonts
     internal\newEngine\scripts
 ) do for /f "tokens=1 delims=" %%b in ('dir /b /a-d %%a 2^>nul') do echo.%%a\%%b>>fileList
-
-echo Done.
-pause
-exit /b 0
