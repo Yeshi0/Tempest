@@ -6,9 +6,6 @@ set /a waited+=timer_wait_final
 if %waited% GEQ %1 (
 	set timer_wait_final=
 	set waited=
-	set timer_wait_t1=
-	set timer_wait_t2=
-	set timer_wait_tDiff=
-	exit /b 0
+	exit /b
 )
 goto :wait
