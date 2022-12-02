@@ -1,0 +1,1 @@
+createObject settingsButton ; type=button ; alignX=middle ; alignY=bottom ; moveTo=top ; textLabel=settings ; onClick=startScript switchSceneFade.yss settings
