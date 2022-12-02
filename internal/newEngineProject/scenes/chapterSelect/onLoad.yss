@@ -1,1 +1,2 @@
-raiseHardError NOT_IMPLEMENTED
+set playLevel=c1m2.dat
+startScript playingLevel.yss

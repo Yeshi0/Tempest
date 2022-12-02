@@ -7,6 +7,9 @@ screenEffect 0 short
 waitForEffects
 
 switchScene $startArgument
+if result X= switchedScene (
+	raiseHardError SWITCH_SCENE_FAILED
+)
 screenEffect 200 short
 waitForEffects
 

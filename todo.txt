@@ -17,5 +17,3 @@ only allow numbers in xpos/ypos
 viewport lags behind focused objects
 fix walljumping
 multi process rendering
-possibly use a flag based if
-fix button onClick property
