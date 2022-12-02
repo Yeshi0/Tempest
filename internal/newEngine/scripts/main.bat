@@ -311,7 +311,8 @@ for /l %%. in (1,1,2999) do (
 						)
 						if "!obj%%a_hover!"=="true" (
 							if "!mouseClick!.!prevButtonMouseClick!.!buttonsDisabled!"=="0.1.false" (
-								set /a prevButtonMouseClick=0,mouseClick=0,scriptCount+=1,pid!scriptCount!_lineCount=1,pid!scriptCount!_execLine=0
+								set /a prevButtonMouseClick=0,mouseClick=0,scriptCount+=1
+								set /a pid!scriptCount!_lineCount=1,pid!scriptCount!_execLine=0,pid!scriptCount!_sleepTicks=0
 								set pid!scriptCount!_l1=!obj%%a_onClick!
 								set pid!scriptCount!_path=TEMP
 							)
