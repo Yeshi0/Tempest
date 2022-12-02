@@ -1,8 +1,8 @@
+endFrame
 modifyObjectProperty viewport focusObject none
 objectManager applyLogic player applyPlayerController none
 killObject player
 
-wait 15
 screenEffect 0 short
 waitForEffects
 

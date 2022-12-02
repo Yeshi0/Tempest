@@ -281,7 +281,6 @@ for /l %%. in (1,1,2999) do (
 											if "%%g"=="tileGroup" (
 												for /l %%i in (1,1,!objectCount!) do if "!obj%%i_name!"=="%%d" (
 													if "!obj%%i_collisionList!"=="!obj%%i_collisionList:-%%h-=§!" set pid%%a_skipUntilParenthesis=true
-													title !time!
 												)
 											)
 										)
@@ -349,11 +348,11 @@ for /l %%. in (1,1,2999) do (
 						if NOT "!keys!"=="" (
 							for /f "tokens=1-5 delims= " %%b in ("!obj%%a_keyUp! !obj%%a_keyDown! !obj%%a_keyLeft! !obj%%a_keyRight! !obj%%a_keyJump!") do (
 								if NOT "!keys:-%%d-=§!"=="!keys!" if !obj%%a_speedX! GTR -24 (
-									set /a obj%%a_speedX-=2
+									set /a obj%%a_speedX-=4
 									if !obj%%a_speedX! GTR -8 if !obj%%a_speedX! LEQ 8 set /a obj%%a_speedX-=6
 								)
 								if NOT "!keys:-%%e-=§!"=="!keys!" if !obj%%a_speedX! LSS 24 (
-									set /a obj%%a_speedX+=2
+									set /a obj%%a_speedX+=4
 									if !obj%%a_speedX! LSS 8 if !obj%%a_speedX! GEQ -8 set /a obj%%a_speedX+=6
 								)
 
@@ -372,8 +371,8 @@ for /l %%. in (1,1,2999) do (
 							if defined keys set string1=false
 							if NOT "!keys:-%%d-=§!!keys:-%%e-=§!"=="!keys!!keyS!" set string1=true
 							if "!string1!"=="true" (
-								if !obj%%a_speedX! LEQ -1 set /a obj%%a_speedX+=4
-								if !obj%%a_speedX! GEQ 1 set /a obj%%a_speedX-=4
+								if !obj%%a_speedX! LEQ -1 set /a obj%%a_speedX+=6
+								if !obj%%a_speedX! GEQ 1 set /a obj%%a_speedX-=6
 							)
 						) else set /a obj%%a_decreaseSpeedX=0
 					)
