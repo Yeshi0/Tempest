@@ -1,0 +1,18 @@
+modifyObjectProperty viewport focusObject none
+objectManager applyLogic player applyPlayerController none
+killObject player
+
+wait 15
+screenEffect 0 short
+waitForEffects
+
+killObject viewport
+engineProperties disableButtons
+screenEffect 0 short
+waitForEffects
+
+startScript spawnPlayer.yss
+startScript playingLevel.yss noReload
+endFrame
+screenEffect 200 short
+waitForEffects

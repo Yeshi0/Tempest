@@ -1,3 +1,7 @@
+if startArgument == noReload (
+	goto :main
+)
+
 engineProperties disableButtons
 screenEffect 0 short
 waitForEffects
@@ -27,6 +31,9 @@ getObjectProperty player xpos
 set playerXpos=$result
 
 :main
-exit
+checkCollision player tileGroup:spike (
+	startScript playerDied.yss
+	exit
+)
 endFrame
 goto :main

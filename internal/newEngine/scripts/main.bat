@@ -275,6 +275,18 @@ for /l %%. in (1,1,2999) do (
 										for /f "tokens=1-2 delims==" %%g in ("%%e") do set obj%%f_%%g=%%h
 									)
 
+								) else if "%%c"=="checkCollision" (
+									for /f "tokens=2-3 delims= " %%d in ("!exec!") do (
+										for /f "tokens=1-2 delims=:" %%g in ("%%e") do (
+											if "%%g"=="tileGroup" (
+												for /l %%i in (1,1,!objectCount!) do if "!obj%%i_name!"=="%%d" (
+													if "!obj%%i_collisionList!"=="!obj%%i_collisionList:-%%h-=§!" set pid%%a_skipUntilParenthesis=true
+													title !time!
+												)
+											)
+										)
+									)
+
 								) else if exist newEngine\scripts\ic-%%c.bat (
 									set /a currentPid=%%a
 									call newEngine\scripts\ic-%%c.bat
@@ -380,7 +392,7 @@ for /l %%. in (1,1,2999) do (
 					)
 
 					if "!obj%%a_useCollisions!"=="true" (
-						set obj%%a_collisionList=
+						set obj%%a_collisionList=-
 						set obj%%a_grounded=false
 
 						rem bottom left collision
@@ -391,7 +403,7 @@ for /l %%. in (1,1,2999) do (
 							set collisionGroupId=!lcm_l%%c:~%%b,1!
 							for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
 						)
-						if defined collisionType set obj%%a_collisionList=!collisionType! !obj%%a_collisionList!
+						if defined collisionType set obj%%a_collisionList=-!collisionType!!obj%%a_collisionList!
 						if "!collisionType!"=="solid" (
 							set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX-1-ccSpeedX,ccDistY=obj%%a_ypos+1-ccDistY-ccSpeedY
 							if !ccDistX! GTR !ccDistY! (
@@ -411,7 +423,7 @@ for /l %%. in (1,1,2999) do (
 							set collisionGroupId=!lcm_l%%c:~%%b,1!
 							for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
 						)
-						if defined collisionType set obj%%a_collisionList=!collisionType! !obj%%a_collisionList!
+						if defined collisionType set obj%%a_collisionList=-!collisionType!!obj%%a_collisionList!
 						if "!collisionType!"=="solid" (
 							set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX+1-obj%%a_speedX,ccDistX=-6-ccDistX,ccDistY=obj%%a_ypos-ccDistY+1-obj%%a_speedY-2
 							if !ccDistX! GEQ !ccDistY! (
@@ -431,7 +443,7 @@ for /l %%. in (1,1,2999) do (
 							set collisionGroupId=!lcm_l%%c:~%%b,1!
 							for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
 						)
-						if defined collisionType set obj%%a_collisionList=!collisionType! !obj%%a_collisionList!
+						if defined collisionType set obj%%a_collisionList=-!collisionType!!obj%%a_collisionList!
 						if "!collisionType!"=="solid" (
 							set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX-ccSpeedX,ccDistY=obj%%a_ypos-ccDistY-ccSpeedY,ccDistY=-6-ccDistY
 							if !ccDistX! GTR !ccDistY! (
@@ -450,7 +462,7 @@ for /l %%. in (1,1,2999) do (
 							set collisionGroupId=!lcm_l%%c:~%%b,1!	
 							for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
 						)
-						if defined collisionType set obj%%a_collisionList=!collisionType! !obj%%a_collisionList!
+						if defined collisionType set obj%%a_collisionList=-!collisionType!!obj%%a_collisionList!
 						if "!collisionType!"=="solid" (
 							set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX+1-obj%%a_speedX,ccDistX=-6-ccDistX,ccDistY=obj%%a_ypos-ccDistY-ccSpeedY,ccDistY=-6-ccDistY
 							if !ccDistX! GEQ !ccDistY! (

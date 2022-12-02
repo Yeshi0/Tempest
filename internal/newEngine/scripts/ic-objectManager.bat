@@ -15,6 +15,11 @@ for /f "tokens=2-6 delims= " %%d in ("!exec!") do (
 					set obj!objId!_playerController=topDown
 					set obj!objId!_useCollisions=true
 				)
+				if "%%g"=="none" (
+					set obj!objId!_playerController=none
+					set /a obj!objId!_playerController_speedX=0
+					set /a obj!objId!_playerController_speedY=0
+				)
 			)
 			if "%%f"=="applyKeybinds" (
 				for /f "tokens=1-5 delims=:" %%i in ("%%g") do (
