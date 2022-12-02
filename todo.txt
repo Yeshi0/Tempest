@@ -15,7 +15,6 @@ cache level safety
 fix math AGAIN
 only allow numbers in xpos/ypos
 viewport lags behind focused objects
-prevent creating viewports if no level is loaded
 fix walljumping
 multi process rendering
 possibly use a flag based if

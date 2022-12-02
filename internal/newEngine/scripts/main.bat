@@ -99,7 +99,7 @@ for /l %%. in (1,1,2999) do (
 	)
 
 	if !tpsTimer! GEQ 50 set /a tpsTimer=0
-	set /a ticksToExecute=tpsTimer/!csPerTick!
+	set /a ticksToExecute=tpsTimer/csPerTick
 	if !ticksToExecute! GEQ 1 for /l %%z in (1,1,!ticksToExecute!) do (
 		if defined screenEffect (
 			if NOT defined screenEffectLength (
