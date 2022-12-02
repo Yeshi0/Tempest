@@ -75,7 +75,7 @@ for /l %%. in (1,1,2999) do (
 
 	if "!mouseClick!"=="1" (
 		set /a offset=hoverTileX-1
-		for /f "tokens=1-3 delims= " %%a in ("!hoverTileX! !hoverTileY! !offset!") do set lcm_l%%b=!lcm_l%%b:~0,%%c!0!lcm_l%%b:~%%a!
+		for /f "tokens=1-3 delims= " %%a in ("!hoverTileX! !hoverTileY! !offset!") do set lcm_l%%b=!lcm_l%%b:~0,%%c!1!lcm_l%%b:~%%a!
 	)
 	if "!mouseClick!"=="2" (
 		set /a offset=hoverTileX-1
@@ -90,6 +90,7 @@ copy newEngineProject\levels\!level! newEngineProject\levels\backup.dat >nul
 del newEngineProject\levels\!level!
 for /l %%a in (1,1,50) do for /l %%b in (1,1,20) do (
 	set /a offset=%%a-1
-	for %%c in (!offset!) do if "!lcm_l%%b:~%%c,1!"=="0" echo.tile:genericSolid.dat:%%a:%%b >>newEngineProject\levels\c1m1.dat
+	for %%c in (!offset!) do if "!lcm_l%%b:~%%c,1!"=="0" echo.tile:genericSolid.dat:%%a:%%b >>newEngineProject\levels\!level!
+	for %%c in (!offset!) do if "!lcm_l%%b:~%%c,1!"=="1" echo.tile:genericSpike.dat:%%a:%%b >>newEngineProject\levels\!level!
 )
 exit /b 0
