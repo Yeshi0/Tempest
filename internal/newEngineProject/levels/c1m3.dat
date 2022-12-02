@@ -100,6 +100,7 @@ tile:genericSolid.dat:4:46
 tile:genericSolid.dat:4:47 
 tile:genericSolid.dat:4:48 
 tile:genericSolid.dat:4:49 
+tile:genericSpike.dat:4:50 
 tile:genericSolid.dat:4:53 
 tile:genericSpike.dat:4:85 
 tile:genericSolid.dat:5:1 
@@ -121,7 +122,6 @@ tile:genericSolid.dat:6:38
 tile:genericSpike.dat:6:39 
 tile:genericSolid.dat:6:40 
 tile:genericSolid.dat:6:49 
-tile:genericSpike.dat:6:50 
 tile:genericSolid.dat:6:53 
 tile:genericSolid.dat:6:84 
 tile:genericSolid.dat:7:1 
@@ -142,6 +142,7 @@ tile:genericSolid.dat:8:43
 tile:genericSolid.dat:8:44 
 tile:genericSolid.dat:8:45 
 tile:genericSolid.dat:8:49 
+tile:genericSpike.dat:8:50 
 tile:genericSolid.dat:8:53 
 tile:genericSolid.dat:9:1 
 tile:genericSpike.dat:9:2 
@@ -166,7 +167,6 @@ tile:genericSpike.dat:10:32
 tile:genericSpike.dat:10:33 
 tile:genericSolid.dat:10:42 
 tile:genericSolid.dat:10:49 
-tile:genericSpike.dat:10:50 
 tile:genericSolid.dat:10:53 
 tile:genericSolid.dat:11:1 
 tile:genericSolid.dat:11:2 

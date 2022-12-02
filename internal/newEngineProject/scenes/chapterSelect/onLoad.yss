@@ -1,2 +1,2 @@
-set playLevel=c1m2.dat
+set playLevel=c1m3.dat
 startScript playingLevel.yss
