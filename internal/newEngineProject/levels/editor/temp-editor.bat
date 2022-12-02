@@ -75,7 +75,7 @@ for /l %%. in (1,1,2999) do (
 
 	if "!mouseClick!"=="1" (
 		set /a offset=hoverTileX-1
-		for /f "tokens=1-3 delims= " %%a in ("!hoverTileX! !hoverTileY! !offset!") do set lcm_l%%b=!lcm_l%%b:~0,%%c!1!lcm_l%%b:~%%a!
+		for /f "tokens=1-3 delims= " %%a in ("!hoverTileX! !hoverTileY! !offset!") do set lcm_l%%b=!lcm_l%%b:~0,%%c!0!lcm_l%%b:~%%a!
 	)
 	if "!mouseClick!"=="2" (
 		set /a offset=hoverTileX-1

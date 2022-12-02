@@ -352,7 +352,7 @@ for /l %%. in (1,1,2999) do (
 								)
 							)
 						)
-						if !obj%%a_speedY! GTR -40 set /a obj%%a_speedY-=4
+						if !obj%%a_speedY! GTR -32 set /a obj%%a_speedY-=4
 						set /a obj%%a_xpos+=obj%%a_speedX/8,obj%%a_ypos+=obj%%a_speedY/6
 
 						if "!obj%%a_grounded!"=="true" (
