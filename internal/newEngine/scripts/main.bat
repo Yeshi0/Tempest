@@ -270,12 +270,6 @@ for /l %%. in (1,1,2999) do (
 								) else if "%%c"=="gotoReturn" (
 									set /a pid%%a_execLine=pid%%a_gotoReturn
 
-								) else if "%%c"=="loadObject" (
-									for /f "tokens=2 delims= " %%d in ("!exec!") do call newEngine\scripts\objectManager.bat loadObject scenes\!currentScene!\objects\%%d
-
-								) else if "%%c"=="loadGlobalObject" (
-									for /f "tokens=2 delims= " %%d in ("!exec!") do call newEngine\scripts\objectManager.bat loadObject objects\%%d
-
 								) else if "%%c"=="modifyObjectProperty" (
 									for /f "tokens=2-3 delims= " %%d in ("!exec!") do for /l %%f in (1,1,!objectCount!) do if "%%d"=="!obj%%f_name!" (
 										for /f "tokens=1-2 delims==" %%g in ("%%e") do set obj%%f_%%g=%%h
@@ -388,6 +382,7 @@ for /l %%. in (1,1,2999) do (
 					if "!obj%%a_useCollisions!"=="true" (
 						set obj%%a_collisionList=
 						set obj%%a_grounded=false
+
 						rem bottom left collision
 						set /a ccXpos=obj%%a_xpos+7,ccXpos/=8,ccYpos=obj%%a_ypos+7,ccYpos/=8,ccCheckX=ccXpos-1
 						set collisionGroupId=
