@@ -337,11 +337,11 @@ for /l %%. in (1,1,2999) do (
 							for /f "tokens=1-5 delims= " %%b in ("!obj%%a_keyUp! !obj%%a_keyDown! !obj%%a_keyLeft! !obj%%a_keyRight! !obj%%a_keyJump!") do (
 								if NOT "!keys:-%%d-=§!"=="!keys!" if !obj%%a_speedX! GTR -24 (
 									set /a obj%%a_speedX-=2
-									if !obj%%a_speedX! GTR 0 if !obj%%a_speedX! LEQ 6 set /a obj%%a_speedX-=4
+									if !obj%%a_speedX! GTR -8 if !obj%%a_speedX! LEQ 8 set /a obj%%a_speedX-=6
 								)
 								if NOT "!keys:-%%e-=§!"=="!keys!" if !obj%%a_speedX! LSS 24 (
 									set /a obj%%a_speedX+=2
-									if !obj%%a_speedX! LSS 0 if !obj%%a_speedX! GEQ -6 set /a obj%%a_speedX+=4
+									if !obj%%a_speedX! LSS 8 if !obj%%a_speedX! GEQ -8 set /a obj%%a_speedX+=6
 								)
 
 								if "!obj%%a_collideSide!"=="bottom" set obj%%a_grounded=true
@@ -359,10 +359,9 @@ for /l %%. in (1,1,2999) do (
 							if defined keys set string1=false
 							if NOT "!keys:-%%d-=§!!keys:-%%e-=§!"=="!keys!!keyS!" set string1=true
 							if "!string1!"=="true" (
-								if !obj%%a_speedX! LEQ -1 set /a obj%%a_speedX+=2
-								if !obj%%a_speedX! GEQ 1 set /a obj%%a_speedX-=2
+								if !obj%%a_speedX! LEQ -1 set /a obj%%a_speedX+=4
+								if !obj%%a_speedX! GEQ 1 set /a obj%%a_speedX-=4
 							)
-
 						) else set /a obj%%a_decreaseSpeedX=0
 					)
 
