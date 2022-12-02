@@ -18,4 +18,5 @@ set /a screenEffectStartingColor=0
 set buttonsDisabled=false
 set staticButtons=true
 set staticText=true
+set /a yssLinesExecuted=0
 exit /b 0

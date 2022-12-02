@@ -27,6 +27,57 @@ getObjectProperty player xpos
 set playerXpos=$result
 
 :main
-exit
+set variable=someValue
+set variable=someValue
+set variable=someValue
+set variable=someValue
+set variable=someValue
+if variable == something (
+	raiseHardError this_isnt_supposed_to_happen
+)
+if variable == something (
+	raiseHardError this_isnt_supposed_to_happen
+)
+if variable == something (
+	raiseHardError this_isnt_supposed_to_happen
+)
+if variable == something (
+	raiseHardError this_isnt_supposed_to_happen
+)
+if variable == something (
+	raiseHardError this_isnt_supposed_to_happen
+)
+goto :label
+
+raiseHardError this_wont_run_ever
+
+:label
+set asdf=asdf
+set asdf=asdf
+set asdf=asdf
+set asdf=asdf
+set asdf=asdf
+set asdf=asdf
+set asdf=asdf
+set asdf=asdf
+set asdf=asdf
+if variable == something (
+	raiseHardError this_isnt_supposed_to_happen
+)
+if variable == something (
+	raiseHardError this_isnt_supposed_to_happen
+)
+if variable == something (
+	raiseHardError this_isnt_supposed_to_happen
+)
+if variable == something (
+	raiseHardError this_isnt_supposed_to_happen
+)
+if variable == something (
+	raiseHardError this_isnt_supposed_to_happen
+)
+if variable == something (
+	raiseHardError this_isnt_supposed_to_happen
+)
 endFrame
 goto :main

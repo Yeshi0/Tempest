@@ -53,11 +53,9 @@ for /l %%. in (1,1,2999) do (
 		set /a timer100cs-=100
 		if !timer100cs! GEQ 100 set /a timer100cs=0
 
-		set /a fpsFinal=fpsFrames
-		set /a fpsFrames=0
-
-		set /a tpsFinal=tpsTicks
-		set /a tpsTicks=0
+		set /a fpsFinal=fpsFrames,fpsFrames=0
+		set /a tpsFinal=tpsTicks,tpsTicks=0
+		set /a yssLinesFinal=yssLinesExecuted,yssLinesExecuted=0
 
 		if "!debugTitlebar!"=="0" (
 			title !title! ^| Press {TAB} to toggle debug.
@@ -65,8 +63,10 @@ for /l %%. in (1,1,2999) do (
 		) else (
 			set dispKeyPressed=0
 			if defined keyPressed set dispKeyPressed=!keyPressed!
-			title !persistent_engineRuntimeVersion! RT ^| FPS: !fpsFinal!/!maxFps! ^(!tpsFinal!/!maxTps!^) ^| OBJ: !objectCount! ^| YSS: !scriptCount! ^| Press {BACKSPACE} to show dev console.
+			title !persistent_engineRuntimeVersion! RT ^| FPS: !fpsFinal!/!maxFps! ^(!tpsFinal!/!maxTps!^) ^| OBJ: !objectCount! ^| YSS: !scriptCount! ^(LPS: !yssLinesFinal!^) ^| Press {BACKSPACE} to show dev console.
 		)
+
+		if "!exitGame!"=="true" exit /b 0
 	)
 	if !timer500cs! GEQ 500 (
 		set /a timer500cs-=500
@@ -95,10 +95,7 @@ for /l %%. in (1,1,2999) do (
 		set /a dispTimer-=csPerFrame,fpsFrames+=1
 		if !dispTimer! GEQ !csPerFrame! set /a dispTimer=0
 		<nul set /p=[1;1H[48;2;!screenColor!;!screenColor!;!screenColor!m
-		for /l %%a in (56,-1,1) do (
-			set d=!d%%a:~0,88!
-			echo.!d!
-		)
+		for /l %%a in (56,-1,1) do echo(!d%%a:~0,88!
 	)
 
 	if !tpsTimer! GEQ 50 set /a tpsTimer=0
@@ -164,6 +161,7 @@ for /l %%. in (1,1,2999) do (
 							)
 
 						) else (
+							set /a yssLinesExecuted+=1
 							if NOT "!exec!"=="!exec:$=hasVariable!" (
 								if defined pid%%a_vo_l!pid%%a_execLine! (
 									set /a variableOffset=pid%%a_vo_l%%b,variableLength=pid%%a_vl_l%%b
@@ -283,9 +281,6 @@ for /l %%. in (1,1,2999) do (
 										for /f "tokens=1-2 delims==" %%g in ("%%e") do set obj%%f_%%g=%%h
 									)
 
-								) else if "%%c"=="exitGame" (
-									exit /b 0
-
 								) else if exist newEngine\scripts\ic-%%c.bat (
 									set /a currentPid=%%a
 									call newEngine\scripts\ic-%%c.bat
@@ -322,11 +317,7 @@ for /l %%. in (1,1,2999) do (
 						)
 						if "!obj%%a_hover!"=="true" (
 							if "!mouseClick!.!prevButtonMouseClick!.!buttonsDisabled!"=="0.1.false" (
-								set /a prevButtonMouseClick=0
-								set /a mouseClick=0
-								set /a scriptCount+=1
-								set /a pid!scriptCount!_lineCount=1
-								set /a pid!scriptCount!_execLine=0
+								set /a prevButtonMouseClick=0,mouseClick=0,scriptCount+=1,pid!scriptCount!_lineCount=1,pid!scriptCount!_execLine=0
 								set pid!scriptCount!_l1=!obj%%a_onClick!
 								set pid!scriptCount!_path=TEMP
 							)
@@ -366,9 +357,8 @@ for /l %%. in (1,1,2999) do (
 								)
 							)
 						)
-						set /a obj%%a_xpos+=obj%%a_speedX/8
 						if !obj%%a_speedY! GTR -40 set /a obj%%a_speedY-=4
-						set /a obj%%a_ypos+=obj%%a_speedY/6
+						set /a obj%%a_xpos+=obj%%a_speedX/8,obj%%a_ypos+=obj%%a_speedY/6
 
 						if "!obj%%a_grounded!"=="true" (
 							set string1=true
@@ -460,8 +450,6 @@ for /l %%. in (1,1,2999) do (
 						rem top right collision
 						rem do this
 					)
-
-					title !obj%%a_collisionList!
 
 					if "%%z"=="!ticksToExecute!" (
 						set /a num1=-1
