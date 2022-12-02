@@ -1,2 +1,4 @@
-set playLevel=c1m1.dat
-startScript playingLevel.yss
+loadObject titleText.yss
+loadObject exitButton.yss
+loadObject settingsButton.yss
+loadObject playButton.yss
