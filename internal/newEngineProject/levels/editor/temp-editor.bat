@@ -7,7 +7,7 @@ cd ..
 call newEngine\scripts\init.bat
 color 70
 
-set level=c1m1.dat
+set level=c1m2.dat
 
 :loadLevel
 set exec=loadLevel !level!
