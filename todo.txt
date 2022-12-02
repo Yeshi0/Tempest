@@ -3,13 +3,10 @@ implement .yss commands for mpg123
 if less than command
 if greater than command
 discordrpc functions
-collision
 documentation explorer
-getinput sometimes gets stuck injecting
 find alternatve solution to needing to sleep for 1 tick after "goto" or "gotoReturn"
 allow for dynamic resizing
 engineProperty for DHRM
-check requested fps/tps values in engineProperties
 only allow letters in property names in the getObjectProperty function
 checkCollision function
 go over every call to checkString
@@ -18,11 +15,8 @@ cache level safety
 fix math AGAIN
 only allow numbers in xpos/ypos
 viewport lags behind focused objects
-fix viewports
 prevent creating viewports if no level is loaded
 fix walljumping
-right wall collision is broken
-convert all spaces to tabs (thanks vscode for automatically choosing the inferior indentation character)
-self updater doesnt work with backslashes/forwardslashes
 multi process rendering
 possibly use a flag based if
+fix button onClick property

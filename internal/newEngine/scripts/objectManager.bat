@@ -192,6 +192,10 @@ if "%1"=="loadObject" (
 				)
 			)
 			if "!newProperty_type!"=="viewport" (
+				if NOT defined lrb_l1 (
+					call newEngine\scripts\objectManager.bat kill !newId!
+					exit /b 1
+				)
 				set /a newXpos=newProperty_xpos
 				set /a newYpos=newProperty_ypos
 				set /a newEndXpos=newXpos+newProperty_width
