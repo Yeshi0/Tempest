@@ -6,6 +6,8 @@ engineProperties disableButtons
 screenEffect 0 short
 waitForEffects
 
+killScript mainMenuBackground.yss
+
 set gamePaused=false
 if playLevel == NUL (
 	raiseHardError LEVEL_NAME_UNDEFINED

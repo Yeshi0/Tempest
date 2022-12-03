@@ -1,1 +1,1 @@
-createObject viewport ; type=viewport ; focusObject=player ; xpos=1 ; ypos=1 ; width=88 ; height=56 ; moveTo=right 
+createObject viewport ; type=viewport ; xpos=1 ; ypos=1 ; width=88 ; height=56 ; moveTo=right 

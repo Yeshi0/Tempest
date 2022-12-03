@@ -301,7 +301,7 @@ for /l %%. in (1,1,2999) do (
 		for /l %%a in (1,1,!objectCount!) do (
 			if defined obj%%a_type (
 				if "!obj%%a_type!"=="button" (
-					if "%%z"=="1" (
+					if "%%z"=="!ticksToExecute!" (
 						set obj%%a_prevHover=!obj%%a_hover!
 						set obj%%a_hover=false
 						if !fixedMouseXpos! GEQ !obj%%a_xpos! if !fixedMouseXpos! LEQ !obj%%a_endXpos! if !fixedMouseYpos! GEQ !obj%%a_ypos! if !fixedMouseYpos! LEQ !obj%%a_endYpos! set obj%%a_hover=true
@@ -332,7 +332,7 @@ for /l %%. in (1,1,2999) do (
 					)
 
 				) else if "!obj%%a_type!"=="text" (
-					if "%%z"=="1" (
+					if "%%z"=="!ticksToExecute!" (
 						if NOT "!obj%%a_textLabel!.!staticText!"=="!obj%%a_prevTextLabel!.true" (
 							set obj%%a_prevTextLabel=!obj%%a_textLabel!
 							set /a num1=0
