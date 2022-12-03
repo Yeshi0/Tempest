@@ -19,4 +19,5 @@ set buttonsDisabled=false
 set staticButtons=true
 set staticText=true
 set /a yssLinesExecuted=0
+set cp=)
 exit /b 0

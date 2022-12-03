@@ -101,48 +101,7 @@ for /l %%. in (1,1,2999) do (
 	if !tpsTimer! GEQ 50 set /a tpsTimer=0
 	set /a ticksToExecute=tpsTimer/csPerTick
 	if !ticksToExecute! GEQ 1 for /l %%z in (1,1,!ticksToExecute!) do (
-		if defined screenEffect (
-			if NOT defined screenEffectLength (
-				set screenEffect=
-
-			) else (
-				if NOT "!screenEffectLength!"=="!prevScreenEffectLength!" (
-					if defined sll_!screenEffectLength! set /a diffPerTick=sll_!screenEffectLength!
-					set prevScreenEffectLength=!screenEffectLength!
-				)
-
-				set effectExists=false
-				set checkForInvalidChars=!screenEffect!
-				for /l %%b in (0,1,9) do set checkForInvalidChars=!checkForInvalidChars:%%b=§!
-				set checkForInvalidChars=!checkForInvalidChars:§=!
-				if "!checkForInvalidChars!"=="" (
-					set effectExists=true
-					set /a screenEffectTargetColor=screenEffect
-
-				) else set screenEffect=
-
-				if "!effectExists!"=="true" (
-					if !screenEffectStartingColor! GTR !screenEffectTargetColor! (
-						set /a screenColor-=diffPerTick
-						if !screenColor! LEQ !screenEffectTargetColor! (
-							set /a screenColor=screenEffectTargetColor,screenEffectStartingColor=screenColor
-							set screenEffect=
-						)
-					)
-					if !screenEffectStartingColor! LSS !screenEffectTargetColor! (
-						set /a screenColor+=diffPerTick
-						if !screenColor! GEQ !screenEffectTargetColor! (
-							set /a screenColor=screenEffectTargetColor,screenEffectStartingColor=screenColor
-							set screenEffect=
-						)
-					)
-					if "!screenEffectStartingColor!"=="!screenEffectTargetColor!" (
-						set screenEffect=
-					)
-				)
-			)
-		)
-
+		if defined screenEffect call newEngine\scripts\screenEffect.bat
 		set /a tpsTicks+=1,tpsTimer-=csPerTick
 		for /l %%a in (1,1,!scriptCount!) do (
 			if !pid%%a_sleepTicks! GEQ 1 (
@@ -299,8 +258,8 @@ for /l %%. in (1,1,2999) do (
 		)
 
 		for /l %%a in (1,1,!objectCount!) do (
-			if "!obj%%a_type!"=="button" (
-				if "%%z"=="!ticksToExecute!" (
+			if "%%z"=="!ticksToExecute!" (
+				if "!obj%%a_type!"=="button" (
 					set obj%%a_prevHover=!obj%%a_hover!
 					set obj%%a_hover=false
 					if !fixedMouseXpos! GEQ !obj%%a_xpos! if !fixedMouseXpos! LEQ !obj%%a_endXpos! if !fixedMouseYpos! GEQ !obj%%a_ypos! if !fixedMouseYpos! LEQ !obj%%a_endYpos! set obj%%a_hover=true
@@ -328,10 +287,8 @@ for /l %%. in (1,1,2999) do (
 						)
 						set /a prevButtonMouseClick=mouseClick
 					)
-				)
 
-			) else if "!obj%%a_type!"=="text" (
-				if "%%z"=="!ticksToExecute!" (
+				) else if "!obj%%a_type!"=="text" (
 					if NOT "!obj%%a_textLabel!.!staticText!"=="!obj%%a_prevTextLabel!.true" (
 						set obj%%a_prevTextLabel=!obj%%a_textLabel!
 						set /a num1=0
@@ -340,9 +297,35 @@ for /l %%. in (1,1,2999) do (
 							for /f "tokens=1-3 delims= " %%c in ("!num2! !num1! !num3!") do set d%%b=!d%%b:~0,%%c!!obj%%a_dl%%d!!d%%b:~%%e!
 						)
 					)
-				)
 
-			) else if "!obj%%a_type!"=="dummy" (
+				) else if "!obj%%a_type!"=="viewport" (
+					set /a num1=-1
+					for /l %%b in (1,1,!objectCount!) do if "!obj%%b_name!"=="!obj%%a_focusObject!" set /a num1=%%b
+					if NOT "!num1!"=="-1" (
+						set /a num2=obj%%a_width/2,obj%%a_viewXpos=obj!num1!_xpos-num2+4,num2=obj%%a_height/2,obj%%a_viewYpos=obj!num1!_ypos-num2+4
+						if !obj%%a_viewXpos! LEQ 1 (
+							set /a obj%%a_viewXpos=1
+						) else (
+							set /a num2=levelEndX-obj%%a_width+1
+							if !obj%%a_viewXpos! GEQ !num2! set /a obj%%a_viewXpos=num2
+						)
+						if !obj%%a_viewYpos! LEQ 1 (
+							set /a obj%%a_viewYpos=1
+						) else (
+							set /a num2=levelEndY-obj%%a_height+1
+							if !obj%%a_viewYpos! GEQ !num2! set /a obj%%a_viewYpos=num2
+						)
+					)
+
+					set /a num1=obj%%a_ypos+obj%%a_height-1,num2=obj%%a_xpos-1,num3=obj%%a_width,num4=88-num2-num3,num4=88-num4,num5=obj%%a_viewXpos-1
+					for /f "tokens=1-4 delims= " %%c in ("!num2! !num3! !num4! !num5!") do for /l %%b in (!obj%%a_ypos!,1,!num1!) do (
+						set /a num6=%%b+obj%%a_viewYpos-1
+						for %%g in (!num6!) do set d%%b=!d%%b:~0,%%c!!lrb_l%%g:~%%f,%%d!!d%%b:~%%e!
+					)
+				)
+			)
+
+			if "!obj%%a_type!"=="dummy" (
 				if "!obj%%a_playerController!"=="sideScroller" (
 					if NOT "!keys!"=="" (
 						for /f "tokens=1-5 delims= " %%b in ("!obj%%a_keyUp! !obj%%a_keyDown! !obj%%a_keyLeft! !obj%%a_keyRight! !obj%%a_keyJump!") do (
@@ -483,33 +466,6 @@ for /l %%. in (1,1,2999) do (
 								set d%%b=!d%%b:~0,%%c!!obj%%a_spriteContent:~%%g,8!!d%%b:~%%e!
 							)
 						)
-					)
-				)
-
-			) else if "!obj%%a_type!"=="viewport" (
-				if "%%z"=="!ticksToExecute!" (
-					set /a num1=-1
-					for /l %%b in (1,1,!objectCount!) do if "!obj%%b_name!"=="!obj%%a_focusObject!" set /a num1=%%b
-					if NOT "!num1!"=="-1" (
-						set /a num2=obj%%a_width/2,obj%%a_viewXpos=obj!num1!_xpos-num2+4,num2=obj%%a_height/2,obj%%a_viewYpos=obj!num1!_ypos-num2+4
-						if !obj%%a_viewXpos! LEQ 1 (
-							set /a obj%%a_viewXpos=1
-						) else (
-							set /a num2=levelEndX-obj%%a_width+1
-							if !obj%%a_viewXpos! GEQ !num2! set /a obj%%a_viewXpos=num2
-						)
-						if !obj%%a_viewYpos! LEQ 1 (
-							set /a obj%%a_viewYpos=1
-						) else (
-							set /a num2=levelEndY-obj%%a_height+1
-							if !obj%%a_viewYpos! GEQ !num2! set /a obj%%a_viewYpos=num2
-						)
-					)
-
-					set /a num1=obj%%a_ypos+obj%%a_height-1,num2=obj%%a_xpos-1,num3=obj%%a_width,num4=88-num2-num3,num4=88-num4,num5=obj%%a_viewXpos-1
-					for /f "tokens=1-4 delims= " %%c in ("!num2! !num3! !num4! !num5!") do for /l %%b in (!obj%%a_ypos!,1,!num1!) do (
-						set /a num6=%%b+obj%%a_viewYpos-1
-						for %%g in (!num6!) do set d%%b=!d%%b:~0,%%c!!lrb_l%%g:~%%f,%%d!!d%%b:~%%e!
 					)
 				)
 			)
