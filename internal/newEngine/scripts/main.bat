@@ -297,227 +297,219 @@ for /l %%. in (1,1,2999) do (
 				if !pid%%a_execLine! GEQ !pid%%a_lineCount! call newEngine\scripts\scriptManager.bat kill %%a
 			)
 		)
-echo %%z >>log
+
 		for /l %%a in (1,1,!objectCount!) do (
-			echo obj%%a: !obj%%a_name! >>log
-			rem remove this if defined, not necessary
-			if defined obj%%a_type (
-				if "%%z"=="!ticksToExecute!" echo S >>log
-				if "!obj%%a_type!"=="button" (
-					if "%%z"=="!ticksToExecute!" (
-						echo B >>log
-						set obj%%a_prevHover=!obj%%a_hover!
-						set obj%%a_hover=false
-						if !fixedMouseXpos! GEQ !obj%%a_xpos! if !fixedMouseXpos! LEQ !obj%%a_endXpos! if !fixedMouseYpos! GEQ !obj%%a_ypos! if !fixedMouseYpos! LEQ !obj%%a_endYpos! set obj%%a_hover=true
-						if NOT "!obj%%a_hover!.!staticButtons!"=="!obj%%a_prevHover!.true" (
-							set /a renderLine=0
-							for /l %%b in (!obj%%a_ypos!,1,!obj%%a_endYpos!) do if defined d%%b (
-								set /a renderLine+=1,offset1=obj%%a_xpos-1,offset2=offset1+obj%%a_dLength
-								for /f "tokens=1-3 delims= " %%c in ("!offset1! !renderLine! !offset2!") do (
-									set new=!obj%%a_dl%%d!
-									if "!obj%%a_hover!"=="true" (
-										set new=!new: =E!
-										set new=!new:█= !
-										set new=!new:E=█!
-									)
-									set d%%b=!d%%b:~0,%%c!!new!!d%%b:~%%e!
+			if "!obj%%a_type!"=="button" (
+				if "%%z"=="!ticksToExecute!" (
+					set obj%%a_prevHover=!obj%%a_hover!
+					set obj%%a_hover=false
+					if !fixedMouseXpos! GEQ !obj%%a_xpos! if !fixedMouseXpos! LEQ !obj%%a_endXpos! if !fixedMouseYpos! GEQ !obj%%a_ypos! if !fixedMouseYpos! LEQ !obj%%a_endYpos! set obj%%a_hover=true
+					if NOT "!obj%%a_hover!.!staticButtons!"=="!obj%%a_prevHover!.true" (
+						set /a renderLine=0
+						for /l %%b in (!obj%%a_ypos!,1,!obj%%a_endYpos!) do if defined d%%b (
+							set /a renderLine+=1,offset1=obj%%a_xpos-1,offset2=offset1+obj%%a_dLength
+							for /f "tokens=1-3 delims= " %%c in ("!offset1! !renderLine! !offset2!") do (
+								set new=!obj%%a_dl%%d!
+								if "!obj%%a_hover!"=="true" (
+									set new=!new: =E!
+									set new=!new:█= !
+									set new=!new:E=█!
 								)
-							)
-						)
-						if "!obj%%a_hover!"=="true" (
-							if "!mouseClick!.!prevButtonMouseClick!.!buttonsDisabled!"=="0.1.false" (
-								set /a prevButtonMouseClick=0,mouseClick=0,scriptCount+=1
-								set /a pid!scriptCount!_lineCount=1,pid!scriptCount!_execLine=0,pid!scriptCount!_sleepTicks=0
-								set pid!scriptCount!_l1=!obj%%a_onClick!
-								set pid!scriptCount!_path=TEMP
-							)
-							set /a prevButtonMouseClick=mouseClick
-						)
-					)
-
-				) else if "!obj%%a_type!"=="text" (
-					if "%%z"=="!ticksToExecute!" (
-						echo T >>log
-						if NOT "!obj%%a_textLabel!.!staticText!"=="!obj%%a_prevTextLabel!.true" (
-							set obj%%a_prevTextLabel=!obj%%a_textLabel!
-							set /a num1=0
-							for /l %%b in (!obj%%a_ypos!,1,!obj%%a_endYpos!) do if defined d%%b (
-								set /a num1+=1,num2=obj%%a_xpos-1,num3=num2+obj%%a_dLength
-								for /f "tokens=1-3 delims= " %%c in ("!num2! !num1! !num3!") do set d%%b=!d%%b:~0,%%c!!obj%%a_dl%%d!!d%%b:~%%e!
+								set d%%b=!d%%b:~0,%%c!!new!!d%%b:~%%e!
 							)
 						)
 					)
-
-				) else if "!obj%%a_type!"=="dummy" (
-					if "!obj%%a_playerController!"=="sideScroller" (
-						if NOT "!keys!"=="" (
-							for /f "tokens=1-5 delims= " %%b in ("!obj%%a_keyUp! !obj%%a_keyDown! !obj%%a_keyLeft! !obj%%a_keyRight! !obj%%a_keyJump!") do (
-								if NOT "!keys:-%%d-=§!"=="!keys!" if !obj%%a_speedX! GTR -24 (
-									set /a obj%%a_speedX-=4
-									if !obj%%a_speedX! GTR -8 if !obj%%a_speedX! LEQ 8 set /a obj%%a_speedX-=6
-								)
-								if NOT "!keys:-%%e-=§!"=="!keys!" if !obj%%a_speedX! LSS 24 (
-									set /a obj%%a_speedX+=4
-									if !obj%%a_speedX! LSS 8 if !obj%%a_speedX! GEQ -8 set /a obj%%a_speedX+=6
-								)
-
-								if "!obj%%a_collideSide!"=="bottom" set obj%%a_grounded=true
-								if NOT "!keys:-%%f-=§!"=="!keys!" if "!obj%%a_grounded!"=="true" (
-									set obj%%a_grounded=false
-									set /a obj%%a_speedY=40
-								)
-							)
+					if "!obj%%a_hover!"=="true" (
+						if "!mouseClick!.!prevButtonMouseClick!.!buttonsDisabled!"=="0.1.false" (
+							set /a prevButtonMouseClick=0,mouseClick=0,scriptCount+=1
+							set /a pid!scriptCount!_lineCount=1,pid!scriptCount!_execLine=0,pid!scriptCount!_sleepTicks=0
+							set pid!scriptCount!_l1=!obj%%a_onClick!
+							set pid!scriptCount!_path=TEMP
 						)
-						if !obj%%a_speedY! GTR -32 set /a obj%%a_speedY-=4
-						set /a obj%%a_xpos+=obj%%a_speedX/8,obj%%a_ypos+=obj%%a_speedY/6
-
-						if "!obj%%a_grounded!"=="true" (
-							set string1=true
-							if defined keys set string1=false
-							if NOT "!keys:-%%d-=§!!keys:-%%e-=§!"=="!keys!!keyS!" set string1=true
-							if "!string1!"=="true" (
-								if !obj%%a_speedX! LEQ -1 set /a obj%%a_speedX+=6
-								if !obj%%a_speedX! GEQ 1 set /a obj%%a_speedX-=6
-							)
-						) else set /a obj%%a_decreaseSpeedX=0
+						set /a prevButtonMouseClick=mouseClick
 					)
+				)
 
-					if "!obj%%a_playerController!"=="topDown" if "%%z"=="1" (
-						if NOT "!keys!"=="" (
-							for /f "tokens=1-5 delims= " %%b in ("!obj%%a_keyUp! !obj%%a_keyDown! !obj%%a_keyLeft! !obj%%a_keyRight! !obj%%a_keyJump!") do (
-								if NOT "!keys:-%%b-=§!"=="!keys!" set /a obj%%a_ypos+=1
-								if NOT "!keys:-%%c-=§!"=="!keys!" set /a obj%%a_ypos-=1
-								if NOT "!keys:-%%d-=§!"=="!keys!" set /a obj%%a_xpos-=1
-								if NOT "!keys:-%%e-=§!"=="!keys!" set /a obj%%a_xpos+=1
-								if !obj%%a_xpos! LEQ 1 set /a obj%%a_xpos=1
-								if !obj%%a_ypos! LEQ 1 set /a obj%%a_ypos=1
+			) else if "!obj%%a_type!"=="text" (
+				if "%%z"=="!ticksToExecute!" (
+					if NOT "!obj%%a_textLabel!.!staticText!"=="!obj%%a_prevTextLabel!.true" (
+						set obj%%a_prevTextLabel=!obj%%a_textLabel!
+						set /a num1=0
+						for /l %%b in (!obj%%a_ypos!,1,!obj%%a_endYpos!) do if defined d%%b (
+							set /a num1+=1,num2=obj%%a_xpos-1,num3=num2+obj%%a_dLength
+							for /f "tokens=1-3 delims= " %%c in ("!num2! !num1! !num3!") do set d%%b=!d%%b:~0,%%c!!obj%%a_dl%%d!!d%%b:~%%e!
+						)
+					)
+				)
+
+			) else if "!obj%%a_type!"=="dummy" (
+				if "!obj%%a_playerController!"=="sideScroller" (
+					if NOT "!keys!"=="" (
+						for /f "tokens=1-5 delims= " %%b in ("!obj%%a_keyUp! !obj%%a_keyDown! !obj%%a_keyLeft! !obj%%a_keyRight! !obj%%a_keyJump!") do (
+							if NOT "!keys:-%%d-=§!"=="!keys!" if !obj%%a_speedX! GTR -24 (
+								set /a obj%%a_speedX-=4
+								if !obj%%a_speedX! GTR -8 if !obj%%a_speedX! LEQ 8 set /a obj%%a_speedX-=6
+							)
+							if NOT "!keys:-%%e-=§!"=="!keys!" if !obj%%a_speedX! LSS 24 (
+								set /a obj%%a_speedX+=4
+								if !obj%%a_speedX! LSS 8 if !obj%%a_speedX! GEQ -8 set /a obj%%a_speedX+=6
+							)
+
+							if "!obj%%a_collideSide!"=="bottom" set obj%%a_grounded=true
+							if NOT "!keys:-%%f-=§!"=="!keys!" if "!obj%%a_grounded!"=="true" (
+								set obj%%a_grounded=false
+								set /a obj%%a_speedY=40
 							)
 						)
 					)
+					if !obj%%a_speedY! GTR -32 set /a obj%%a_speedY-=4
+					set /a obj%%a_xpos+=obj%%a_speedX/8,obj%%a_ypos+=obj%%a_speedY/6
 
-					if "!obj%%a_useCollisions!"=="true" (
-						set obj%%a_collisionList=-
-						set obj%%a_grounded=false
+					if "!obj%%a_grounded!"=="true" (
+						set string1=true
+						if defined keys set string1=false
+						if NOT "!keys:-%%d-=§!!keys:-%%e-=§!"=="!keys!!keyS!" set string1=true
+						if "!string1!"=="true" (
+							if !obj%%a_speedX! LEQ -1 set /a obj%%a_speedX+=6
+							if !obj%%a_speedX! GEQ 1 set /a obj%%a_speedX-=6
+						)
+					) else set /a obj%%a_decreaseSpeedX=0
+				)
 
-						rem bottom left collision
-						set /a ccXpos=obj%%a_xpos+7,ccXpos/=8,ccYpos=obj%%a_ypos+7,ccYpos/=8,ccCheckX=ccXpos-1
-						set collisionGroupId=
-						set collisionType=
-						for /f "tokens=1-2 delims= " %%b in ("!ccCheckX! !ccYpos!") do (
-							set collisionGroupId=!lcm_l%%c:~%%b,1!
-							for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
+				if "!obj%%a_playerController!"=="topDown" if "%%z"=="1" (
+					if NOT "!keys!"=="" (
+						for /f "tokens=1-5 delims= " %%b in ("!obj%%a_keyUp! !obj%%a_keyDown! !obj%%a_keyLeft! !obj%%a_keyRight! !obj%%a_keyJump!") do (
+							if NOT "!keys:-%%b-=§!"=="!keys!" set /a obj%%a_ypos+=1
+							if NOT "!keys:-%%c-=§!"=="!keys!" set /a obj%%a_ypos-=1
+							if NOT "!keys:-%%d-=§!"=="!keys!" set /a obj%%a_xpos-=1
+							if NOT "!keys:-%%e-=§!"=="!keys!" set /a obj%%a_xpos+=1
+							if !obj%%a_xpos! LEQ 1 set /a obj%%a_xpos=1
+							if !obj%%a_ypos! LEQ 1 set /a obj%%a_ypos=1
 						)
-						if defined collisionType set obj%%a_collisionList=-!collisionType!!obj%%a_collisionList!
-						if "!collisionType!"=="solid" (
-							set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX-1-ccSpeedX,ccDistY=obj%%a_ypos+1-ccDistY-ccSpeedY
-							if !ccDistX! GTR !ccDistY! (
-								set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos+=1,obj%%a_speedX=0
-							)
-							if !ccDistX! LSS !ccDistY! (
-								set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos+=1,obj%%a_speedY=0
-								set obj%%a_grounded=true
-							)
-						)
+					)
+				)
 
-						rem bottom right collision
-						set /a ccXpos=obj%%a_xpos+6,ccXpos/=8,ccYpos=obj%%a_ypos+7,ccYpos/=8
-						set collisionGroupId=
-						set collisionType=
-						for /f "tokens=1-2 delims= " %%b in ("!ccXpos! !ccYpos!") do (
-							set collisionGroupId=!lcm_l%%c:~%%b,1!
-							for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
-						)
-						if defined collisionType set obj%%a_collisionList=-!collisionType!!obj%%a_collisionList!
-						if "!collisionType!"=="solid" (
-							set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX+1-obj%%a_speedX,ccDistX=-6-ccDistX,ccDistY=obj%%a_ypos-ccDistY+1-obj%%a_speedY-2
-							if !ccDistX! GEQ !ccDistY! (
-								set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos-=7,obj%%a_speedX=0
-							)
-							if !ccDistX! LSS !ccDistY! (
-								set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos+=1,obj%%a_speedY=0
-								set obj%%a_grounded=true
-							)
-						)
+				if "!obj%%a_useCollisions!"=="true" (
+					set obj%%a_collisionList=-
+					set obj%%a_grounded=false
 
-						rem top left collision
-						set /a ccXpos=obj%%a_xpos+7,ccXpos/=8,ccYpos=obj%%a_ypos+6,ccYpos/=8,ccCheckX=ccXpos-1,ccCheckY=ccYpos+1
-						set collisionGroupId=
-						set collisionType=
-						for /f "tokens=1-2 delims= " %%b in ("!ccCheckX! !ccCheckY!") do (
-							set collisionGroupId=!lcm_l%%c:~%%b,1!
-							for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
+					rem bottom left collision
+					set /a ccXpos=obj%%a_xpos+7,ccXpos/=8,ccYpos=obj%%a_ypos+7,ccYpos/=8,ccCheckX=ccXpos-1
+					set collisionGroupId=
+					set collisionType=
+					for /f "tokens=1-2 delims= " %%b in ("!ccCheckX! !ccYpos!") do (
+						set collisionGroupId=!lcm_l%%c:~%%b,1!
+						for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
+					)
+					if defined collisionType set obj%%a_collisionList=-!collisionType!!obj%%a_collisionList!
+					if "!collisionType!"=="solid" (
+						set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX-1-ccSpeedX,ccDistY=obj%%a_ypos+1-ccDistY-ccSpeedY
+						if !ccDistX! GTR !ccDistY! (
+							set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos+=1,obj%%a_speedX=0
 						)
-						if defined collisionType set obj%%a_collisionList=-!collisionType!!obj%%a_collisionList!
-						if "!collisionType!"=="solid" (
-							set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX-ccSpeedX,ccDistY=obj%%a_ypos-ccDistY-ccSpeedY,ccDistY=-6-ccDistY
-							if !ccDistX! GTR !ccDistY! (
-								set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos+=1,obj%%a_speedX=0
-							)
-							if !ccDistX! LSS !ccDistY! (
-								set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos-=7,obj%%a_speedY=0
-							)
-						)
-
-						rem top right collision
-						set /a ccXpos=obj%%a_xpos+6,ccXpos/=8,ccYpos=obj%%a_ypos+6,ccYpos/=8,ccCheckY=ccYpos+1
-						set collisionGroupId=
-						set collisionType=
-						for /f "tokens=1-2 delims= " %%b in ("!ccXpos! !ccCheckY!") do (
-							set collisionGroupId=!lcm_l%%c:~%%b,1!	
-							for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
-						)
-						if defined collisionType set obj%%a_collisionList=-!collisionType!!obj%%a_collisionList!
-						if "!collisionType!"=="solid" (
-							set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX+1-obj%%a_speedX,ccDistX=-6-ccDistX,ccDistY=obj%%a_ypos-ccDistY-ccSpeedY,ccDistY=-6-ccDistY
-							if !ccDistX! GEQ !ccDistY! (
-								set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos-=7,obj%%a_speedX=0
-							)
-							if !ccDistX! LSS !ccDistY! (
-								set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos-=7,obj%%a_speedY=0
-							)
+						if !ccDistX! LSS !ccDistY! (
+							set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos+=1,obj%%a_speedY=0
+							set obj%%a_grounded=true
 						)
 					)
 
-					if "%%z"=="!ticksToExecute!" (
-						set /a num1=-1
-						for /l %%b in (1,1,!objectCount!) do if "!obj%%b_name!"=="!obj%%a_renderInto!" if "!obj%%b_type!"=="viewport" set /a num1=%%b
-						if NOT "!num1!"=="-1" (
-							set /a num2=obj%%a_xpos-obj!num1!_viewXpos+1,num3=obj%%a_ypos-obj!num1!_viewYpos+1,num4=num3+7,num5=0,num6=num2-1,num7=num6+8
-							for /l %%b in (!num3!,1,!num4!) do (
-								set /a num5+=1,num8=num5*8-8,num8=obj!num1!_height-num8
-								for /f "tokens=1-5 delims= " %%c in ("!num6! !num5! !num7! !num1! !num8!") do (
-									set d%%b=!d%%b:~0,%%c!!obj%%a_spriteContent:~%%g,8!!d%%b:~%%e!
-								)
-							)
+					rem bottom right collision
+					set /a ccXpos=obj%%a_xpos+6,ccXpos/=8,ccYpos=obj%%a_ypos+7,ccYpos/=8
+					set collisionGroupId=
+					set collisionType=
+					for /f "tokens=1-2 delims= " %%b in ("!ccXpos! !ccYpos!") do (
+						set collisionGroupId=!lcm_l%%c:~%%b,1!
+						for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
+					)
+					if defined collisionType set obj%%a_collisionList=-!collisionType!!obj%%a_collisionList!
+					if "!collisionType!"=="solid" (
+						set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX+1-obj%%a_speedX,ccDistX=-6-ccDistX,ccDistY=obj%%a_ypos-ccDistY+1-obj%%a_speedY-2
+						if !ccDistX! GEQ !ccDistY! (
+							set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos-=7,obj%%a_speedX=0
+						)
+						if !ccDistX! LSS !ccDistY! (
+							set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos+=1,obj%%a_speedY=0
+							set obj%%a_grounded=true
 						)
 					)
 
-				) else if "!obj%%a_type!"=="viewport" (
-					if "%%z"=="!ticksToExecute!" (
-						echo V >>log
-						set /a num1=-1
-						for /l %%b in (1,1,!objectCount!) do if "!obj%%b_name!"=="!obj%%a_focusObject!" set /a num1=%%b
-						if NOT "!num1!"=="-1" (
-							set /a num2=obj%%a_width/2,obj%%a_viewXpos=obj!num1!_xpos-num2+4,num2=obj%%a_height/2,obj%%a_viewYpos=obj!num1!_ypos-num2+4
-							if !obj%%a_viewXpos! LEQ 1 (
-								set /a obj%%a_viewXpos=1
-							) else (
-								set /a num2=levelEndX-obj%%a_width+1
-								if !obj%%a_viewXpos! GEQ !num2! set /a obj%%a_viewXpos=num2
-							)
-							if !obj%%a_viewYpos! LEQ 1 (
-								set /a obj%%a_viewYpos=1
-							) else (
-								set /a num2=levelEndY-obj%%a_height+1
-								if !obj%%a_viewYpos! GEQ !num2! set /a obj%%a_viewYpos=num2
-							)
+					rem top left collision
+					set /a ccXpos=obj%%a_xpos+7,ccXpos/=8,ccYpos=obj%%a_ypos+6,ccYpos/=8,ccCheckX=ccXpos-1,ccCheckY=ccYpos+1
+					set collisionGroupId=
+					set collisionType=
+					for /f "tokens=1-2 delims= " %%b in ("!ccCheckX! !ccCheckY!") do (
+						set collisionGroupId=!lcm_l%%c:~%%b,1!
+						for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
+					)
+					if defined collisionType set obj%%a_collisionList=-!collisionType!!obj%%a_collisionList!
+					if "!collisionType!"=="solid" (
+						set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX-ccSpeedX,ccDistY=obj%%a_ypos-ccDistY-ccSpeedY,ccDistY=-6-ccDistY
+						if !ccDistX! GTR !ccDistY! (
+							set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos+=1,obj%%a_speedX=0
 						)
+						if !ccDistX! LSS !ccDistY! (
+							set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos-=7,obj%%a_speedY=0
+						)
+					)
 
-						set /a num1=obj%%a_ypos+obj%%a_height-1,num2=obj%%a_xpos-1,num3=obj%%a_width,num4=88-num2-num3,num4=88-num4,num5=obj%%a_viewXpos-1
-						for /f "tokens=1-4 delims= " %%c in ("!num2! !num3! !num4! !num5!") do for /l %%b in (!obj%%a_ypos!,1,!num1!) do (
-							set /a num6=%%b+obj%%a_viewYpos-1
-							for %%g in (!num6!) do set d%%b=!d%%b:~0,%%c!!lrb_l%%g:~%%f,%%d!!d%%b:~%%e!
+					rem top right collision
+					set /a ccXpos=obj%%a_xpos+6,ccXpos/=8,ccYpos=obj%%a_ypos+6,ccYpos/=8,ccCheckY=ccYpos+1
+					set collisionGroupId=
+					set collisionType=
+					for /f "tokens=1-2 delims= " %%b in ("!ccXpos! !ccCheckY!") do (
+						set collisionGroupId=!lcm_l%%c:~%%b,1!	
+						for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
+					)
+					if defined collisionType set obj%%a_collisionList=-!collisionType!!obj%%a_collisionList!
+					if "!collisionType!"=="solid" (
+						set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX+1-obj%%a_speedX,ccDistX=-6-ccDistX,ccDistY=obj%%a_ypos-ccDistY-ccSpeedY,ccDistY=-6-ccDistY
+						if !ccDistX! GEQ !ccDistY! (
+							set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos-=7,obj%%a_speedX=0
 						)
+						if !ccDistX! LSS !ccDistY! (
+							set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos-=7,obj%%a_speedY=0
+						)
+					)
+				)
+
+				if "%%z"=="!ticksToExecute!" (
+					set /a num1=-1
+					for /l %%b in (1,1,!objectCount!) do if "!obj%%b_name!"=="!obj%%a_renderInto!" if "!obj%%b_type!"=="viewport" set /a num1=%%b
+					if NOT "!num1!"=="-1" (
+						set /a num2=obj%%a_xpos-obj!num1!_viewXpos+1,num3=obj%%a_ypos-obj!num1!_viewYpos+1,num4=num3+7,num5=0,num6=num2-1,num7=num6+8
+						for /l %%b in (!num3!,1,!num4!) do (
+							set /a num5+=1,num8=num5*8-8,num8=obj!num1!_height-num8
+							for /f "tokens=1-5 delims= " %%c in ("!num6! !num5! !num7! !num1! !num8!") do (
+								set d%%b=!d%%b:~0,%%c!!obj%%a_spriteContent:~%%g,8!!d%%b:~%%e!
+							)
+						)
+					)
+				)
+
+			) else if "!obj%%a_type!"=="viewport" (
+				if "%%z"=="!ticksToExecute!" (
+					set /a num1=-1
+					for /l %%b in (1,1,!objectCount!) do if "!obj%%b_name!"=="!obj%%a_focusObject!" set /a num1=%%b
+					if NOT "!num1!"=="-1" (
+						set /a num2=obj%%a_width/2,obj%%a_viewXpos=obj!num1!_xpos-num2+4,num2=obj%%a_height/2,obj%%a_viewYpos=obj!num1!_ypos-num2+4
+						if !obj%%a_viewXpos! LEQ 1 (
+							set /a obj%%a_viewXpos=1
+						) else (
+							set /a num2=levelEndX-obj%%a_width+1
+							if !obj%%a_viewXpos! GEQ !num2! set /a obj%%a_viewXpos=num2
+						)
+						if !obj%%a_viewYpos! LEQ 1 (
+							set /a obj%%a_viewYpos=1
+						) else (
+							set /a num2=levelEndY-obj%%a_height+1
+							if !obj%%a_viewYpos! GEQ !num2! set /a obj%%a_viewYpos=num2
+						)
+					)
+
+					set /a num1=obj%%a_ypos+obj%%a_height-1,num2=obj%%a_xpos-1,num3=obj%%a_width,num4=88-num2-num3,num4=88-num4,num5=obj%%a_viewXpos-1
+					for /f "tokens=1-4 delims= " %%c in ("!num2! !num3! !num4! !num5!") do for /l %%b in (!obj%%a_ypos!,1,!num1!) do (
+						set /a num6=%%b+obj%%a_viewYpos-1
+						for %%g in (!num6!) do set d%%b=!d%%b:~0,%%c!!lrb_l%%g:~%%f,%%d!!d%%b:~%%e!
 					)
 				)
 			)
