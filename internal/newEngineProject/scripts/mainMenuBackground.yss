@@ -17,7 +17,7 @@ endFrame
 :main
 set bgX=$bgX+2
 modifyObjectProperty viewport viewXpos=$bgX
-if bgX == 81+2 (
+if bgX == 201+2 (
 	screenEffect 0 short
 	waitForEffects
 	startScript mainMenuBackground.yss
