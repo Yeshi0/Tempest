@@ -1,8 +1,8 @@
 killObject player
 killObject viewport
 
-loadGlobalObject player.yss
 loadGlobalObject viewport.yss
+loadGlobalObject player.yss
 modifyObjectProperty viewport focusObject=player
 
 objectManager applyLogic player applyPlayerController sideScroller
