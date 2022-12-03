@@ -1,22 +1,23 @@
 screenEffect 0 short
 waitForEffects
 
-killObject viewport.yss
 loadLevel c1m1.dat
 renderLevel c1m1.dat
-loadGlobalObject viewport.yss
+if bgX == NUL (
+	loadGlobalObject viewport.yss
+)
 engineProperties disableStaticButtons
 engineProperties disableStaticText
 set bgX=1
 set bgY=1
 
 screenEffect 200 short
-goto :main
+endFrame
 
 :main
 set bgX=$bgX+2
 modifyObjectProperty viewport viewXpos=$bgX
-if bgX == 31 (
+if bgX == 81+2 (
 	screenEffect 0 short
 	waitForEffects
 	startScript mainMenuBackground.yss

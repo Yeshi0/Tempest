@@ -297,11 +297,15 @@ for /l %%. in (1,1,2999) do (
 				if !pid%%a_execLine! GEQ !pid%%a_lineCount! call newEngine\scripts\scriptManager.bat kill %%a
 			)
 		)
-
+echo %%z >>log
 		for /l %%a in (1,1,!objectCount!) do (
+			echo obj%%a: !obj%%a_name! >>log
+			rem remove this if defined, not necessary
 			if defined obj%%a_type (
+				if "%%z"=="!ticksToExecute!" echo S >>log
 				if "!obj%%a_type!"=="button" (
 					if "%%z"=="!ticksToExecute!" (
+						echo B >>log
 						set obj%%a_prevHover=!obj%%a_hover!
 						set obj%%a_hover=false
 						if !fixedMouseXpos! GEQ !obj%%a_xpos! if !fixedMouseXpos! LEQ !obj%%a_endXpos! if !fixedMouseYpos! GEQ !obj%%a_ypos! if !fixedMouseYpos! LEQ !obj%%a_endYpos! set obj%%a_hover=true
@@ -333,6 +337,7 @@ for /l %%. in (1,1,2999) do (
 
 				) else if "!obj%%a_type!"=="text" (
 					if "%%z"=="!ticksToExecute!" (
+						echo T >>log
 						if NOT "!obj%%a_textLabel!.!staticText!"=="!obj%%a_prevTextLabel!.true" (
 							set obj%%a_prevTextLabel=!obj%%a_textLabel!
 							set /a num1=0
@@ -489,6 +494,7 @@ for /l %%. in (1,1,2999) do (
 
 				) else if "!obj%%a_type!"=="viewport" (
 					if "%%z"=="!ticksToExecute!" (
+						echo V >>log
 						set /a num1=-1
 						for /l %%b in (1,1,!objectCount!) do if "!obj%%b_name!"=="!obj%%a_focusObject!" set /a num1=%%b
 						if NOT "!num1!"=="-1" (

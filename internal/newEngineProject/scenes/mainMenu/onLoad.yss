@@ -1,5 +1,5 @@
 startScript mainMenuBackground.yss
-endFrame
+wait 5
 loadObject titleText.yss
 loadObject exitButton.yss
 loadObject settingsButton.yss
