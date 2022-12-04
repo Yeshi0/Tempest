@@ -1,7 +1,7 @@
 screenEffect 0 short
 
 random 1 4
-set bgMap=$result
+set bgMap=4
 
 unloadLevel
 loadLevel c1m$bgMap.dat

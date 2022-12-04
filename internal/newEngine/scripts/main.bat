@@ -257,8 +257,7 @@ for /l %%. in (1,1,2999) do (
 			)
 		)
 
-		for /l %%a in (1,1,!objectCount!) do (
-			if "%%z"=="!ticksToExecute!" (
+		if "%%z"=="!ticksToExecute!" for /l %%a in (1,1,!objectCount!) do (
 				if "!obj%%a_type!"=="button" (
 					set obj%%a_prevHover=!obj%%a_hover!
 					set obj%%a_hover=false
@@ -324,7 +323,7 @@ for /l %%. in (1,1,2999) do (
 					)
 				)
 			)
-
+		for /l %%a in (1,1,!objectCount!) do (
 			if "!obj%%a_type!"=="dummy" (
 				if "!obj%%a_playerController!"=="sideScroller" (
 					if NOT "!keys!"=="" (

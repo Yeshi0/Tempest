@@ -4,6 +4,7 @@ rem nov 18 2022: attempted to optimize this mess. took an hour and its barely fa
 rem nov 22 2022: math operations are broken. again.
 rem nov 24 2022: more stuff is cached now. another massive performance increase
 rem nov 24 2022: moved to another script entirely. if this still isnt efficient enough, i have no idea what is
+rem dec 4 2022: guess whats broken again? this pile of shit is!
 set /a variableNameEnd=variableLength+variableOffset+1
 for /f "tokens=1-2 delims= " %%a in ("!currentPid! !currentLine!") do (
 	for /f "tokens=1-3 delims= " %%d in ("!variableOffset! !variableLength! !variableNameEnd!") do (
