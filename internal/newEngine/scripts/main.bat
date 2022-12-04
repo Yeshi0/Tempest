@@ -292,7 +292,7 @@ for /l %%. in (1,1,2999) do (
 					set obj%%a_prevTextLabel=!obj%%a_textLabel!
 					set /a num1=2,num2=obj%%a_ypos+2,num3=obj%%a_endYpos-2
 					for /l %%b in (!num2!,1,!num3!) do if defined d%%b (
-						set /a num1+=1,num2=obj%%a_xpos-1,num3=num2+obj%%a_dLength-4
+						set /a num1+=1,num2=obj%%a_xpos+2,num3=num2+obj%%a_dLength-4
 						for /f "tokens=1-3 delims= " %%c in ("!num2! !num1! !num3!") do set d%%b=!d%%b:~0,%%c!!obj%%a_dl%%d:~2,-2!!d%%b:~%%e!
 					)
 				)
@@ -323,6 +323,7 @@ for /l %%. in (1,1,2999) do (
 				)
 			)
 		)
+
 		for /l %%a in (1,1,!objectCount!) do (
 			if "!obj%%a_type!"=="dummy" (
 				if "!obj%%a_playerController!"=="sideScroller" (

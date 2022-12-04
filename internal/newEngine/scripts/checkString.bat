@@ -86,4 +86,6 @@ set semiColon=
 set quotationMark=
 set asterisk=
 set tab=
+set checkChar=
+for %%a in (allowAsterisk allowEqual allowLetters allowNumbers allowQuotationMark allowSpace allowSymbols allowTab) do set arg_%%a=
 exit /b 0

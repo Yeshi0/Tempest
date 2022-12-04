@@ -70,19 +70,23 @@ if "%1"=="loadObject" (
 				if "!parseProperty%%l:~0,1!"==" " set parseProperty%%l=!parseProperty%%l:~1!
 				if "!parseProperty%%l:~0,1!"==" " (
 					call newEngine\scripts\objectManager.bat kill !newId!
+					for %%x in (newProperty_ parseProperty) do for /f "tokens=2 delims==" %%y in ('set %%a 2^>nul') do set %%y=
 					exit /b 1
 				)
 				if "!parseProperty%%l:~-1,1!"==" " set parseProperty%%l=!parseProperty%%l:~0,-1!
 				if "!parseProperty%%l:~-1,1!"==" " (
 					call newEngine\scripts\objectManager.bat kill !newId!
+					for %%x in (newProperty_ parseProperty) do for /f "tokens=2 delims==" %%y in ('set %%a 2^>nul') do set %%y=
 					exit /b 1
 				)
 				for /f "tokens=1-3 delims==" %%m in ("!parseProperty%%l!") do (
 					if "%%n"=="" (
+						for %%x in (newProperty_ parseProperty) do for /f "tokens=2 delims==" %%y in ('set %%a 2^>nul') do set %%y=
 						exit /b 1
 
 					) else (
 						if NOT "%%o"=="" (
+							for %%x in (newProperty_ parseProperty) do for /f "tokens=2 delims==" %%y in ('set %%a 2^>nul') do set %%y=
 							exit /b 1
 
 						) else (
@@ -128,6 +132,7 @@ if "%1"=="loadObject" (
 				set /a textWidth=stringLength*6
 				if !stringLength! GEQ 15 (
 					call newEngine\scripts\objectManager.bat kill !newId!
+					for %%x in (newProperty_ parseProperty) do for /f "tokens=2 delims==" %%y in ('set %%a 2^>nul') do set %%y=
 					exit /b 1
 				)
 
@@ -178,7 +183,10 @@ if "%1"=="loadObject" (
 						set shitWorkaround=!newProperty_textLabel:~%%l,1!
 						if NOT "!shitWorkaround!"==" " (
 							if exist newEngine\fonts\ne-55-c\font_!shitWorkaround!.spr set fontFilePath=newEngine\fonts\ne-55-c\font_!shitWorkaround!.spr
-							if NOT exist !fontFilePath! exit /b 1
+							if NOT exist !fontFilePath! (
+								for %%x in (newProperty_ parseProperty) do for /f "tokens=2 delims==" %%y in ('set %%a 2^>nul') do set %%y=
+								exit /b 1
+							)
 
 							set /a currentLine=8
 							for %%m in (!newId!) do for /f "delims=" %%n in (!fontFilePath!) do (
@@ -194,6 +202,7 @@ if "%1"=="loadObject" (
 			if "!newProperty_type!"=="viewport" (
 				if NOT defined lrb_l1 (
 					call newEngine\scripts\objectManager.bat kill !newId!
+					for %%x in (newProperty_ parseProperty) do for /f "tokens=2 delims==" %%y in ('set %%a 2^>nul') do set %%y=
 					exit /b 1
 				)
 				set /a newXpos=newProperty_xpos
@@ -225,6 +234,8 @@ if "%1"=="loadObject" (
 		)
 	)
 )
+
+for %%x in (newProperty_ parseProperty) do for /f "tokens=2 delims==" %%y in ('set %%a 2^>nul') do set %%y=
 exit /b 0
 
 :defragmentOids
