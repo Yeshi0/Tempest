@@ -258,71 +258,71 @@ for /l %%. in (1,1,2999) do (
 		)
 
 		if "%%z"=="!ticksToExecute!" for /l %%a in (1,1,!objectCount!) do (
-				if "!obj%%a_type!"=="button" (
-					set obj%%a_prevHover=!obj%%a_hover!
-					set obj%%a_hover=false
-					if !fixedMouseXpos! GEQ !obj%%a_xpos! if !fixedMouseXpos! LEQ !obj%%a_endXpos! if !fixedMouseYpos! GEQ !obj%%a_ypos! if !fixedMouseYpos! LEQ !obj%%a_endYpos! set obj%%a_hover=true
-					if NOT "!obj%%a_hover!.!staticButtons!"=="!obj%%a_prevHover!.true" (
-						set /a renderLine=0
-						for /l %%b in (!obj%%a_ypos!,1,!obj%%a_endYpos!) do if defined d%%b (
-							set /a renderLine+=1,offset1=obj%%a_xpos-1,offset2=offset1+obj%%a_dLength
-							for /f "tokens=1-3 delims= " %%c in ("!offset1! !renderLine! !offset2!") do (
-								set new=!obj%%a_dl%%d!
-								if "!obj%%a_hover!"=="true" (
-									set new=!new: =E!
-									set new=!new:█= !
-									set new=!new:E=█!
-								)
-								set d%%b=!d%%b:~0,%%c!!new!!d%%b:~%%e!
+			if "!obj%%a_type!"=="button" (
+				set obj%%a_prevHover=!obj%%a_hover!
+				set obj%%a_hover=false
+				if !fixedMouseXpos! GEQ !obj%%a_xpos! if !fixedMouseXpos! LEQ !obj%%a_endXpos! if !fixedMouseYpos! GEQ !obj%%a_ypos! if !fixedMouseYpos! LEQ !obj%%a_endYpos! set obj%%a_hover=true
+				if NOT "!obj%%a_hover!.!staticButtons!"=="!obj%%a_prevHover!.true" (
+					set /a renderLine=0
+					for /l %%b in (!obj%%a_ypos!,1,!obj%%a_endYpos!) do if defined d%%b (
+						set /a renderLine+=1,offset1=obj%%a_xpos-1,offset2=offset1+obj%%a_dLength
+						for /f "tokens=1-3 delims= " %%c in ("!offset1! !renderLine! !offset2!") do (
+							set new=!obj%%a_dl%%d!
+							if "!obj%%a_hover!"=="true" (
+								set new=!new: =E!
+								set new=!new:█= !
+								set new=!new:E=█!
 							)
+							set d%%b=!d%%b:~0,%%c!!new!!d%%b:~%%e!
 						)
-					)
-					if "!obj%%a_hover!"=="true" (
-						if "!mouseClick!.!prevButtonMouseClick!.!buttonsDisabled!"=="0.1.false" (
-							set /a prevButtonMouseClick=0,mouseClick=0,scriptCount+=1
-							set /a pid!scriptCount!_lineCount=1,pid!scriptCount!_execLine=0,pid!scriptCount!_sleepTicks=0
-							set pid!scriptCount!_l1=!obj%%a_onClick!
-							set pid!scriptCount!_path=TEMP
-						)
-						set /a prevButtonMouseClick=mouseClick
-					)
-
-				) else if "!obj%%a_type!"=="text" (
-					if NOT "!obj%%a_textLabel!.!staticText!"=="!obj%%a_prevTextLabel!.true" (
-						set obj%%a_prevTextLabel=!obj%%a_textLabel!
-						set /a num1=0
-						for /l %%b in (!obj%%a_ypos!,1,!obj%%a_endYpos!) do if defined d%%b (
-							set /a num1+=1,num2=obj%%a_xpos-1,num3=num2+obj%%a_dLength
-							for /f "tokens=1-3 delims= " %%c in ("!num2! !num1! !num3!") do set d%%b=!d%%b:~0,%%c!!obj%%a_dl%%d!!d%%b:~%%e!
-						)
-					)
-
-				) else if "!obj%%a_type!"=="viewport" (
-					set /a num1=-1
-					for /l %%b in (1,1,!objectCount!) do if "!obj%%b_name!"=="!obj%%a_focusObject!" set /a num1=%%b
-					if NOT "!num1!"=="-1" (
-						set /a num2=obj%%a_width/2,obj%%a_viewXpos=obj!num1!_xpos-num2+4,num2=obj%%a_height/2,obj%%a_viewYpos=obj!num1!_ypos-num2+4
-						if !obj%%a_viewXpos! LEQ 1 (
-							set /a obj%%a_viewXpos=1
-						) else (
-							set /a num2=levelEndX-obj%%a_width+1
-							if !obj%%a_viewXpos! GEQ !num2! set /a obj%%a_viewXpos=num2
-						)
-						if !obj%%a_viewYpos! LEQ 1 (
-							set /a obj%%a_viewYpos=1
-						) else (
-							set /a num2=levelEndY-obj%%a_height+1
-							if !obj%%a_viewYpos! GEQ !num2! set /a obj%%a_viewYpos=num2
-						)
-					)
-
-					set /a num1=obj%%a_ypos+obj%%a_height-1,num2=obj%%a_xpos-1,num3=obj%%a_width,num4=88-num2-num3,num4=88-num4,num5=obj%%a_viewXpos-1
-					for /f "tokens=1-4 delims= " %%c in ("!num2! !num3! !num4! !num5!") do for /l %%b in (!obj%%a_ypos!,1,!num1!) do (
-						set /a num6=%%b+obj%%a_viewYpos-1
-						for %%g in (!num6!) do set d%%b=!d%%b:~0,%%c!!lrb_l%%g:~%%f,%%d!!d%%b:~%%e!
 					)
 				)
+				if "!obj%%a_hover!"=="true" (
+					if "!mouseClick!.!prevButtonMouseClick!.!buttonsDisabled!"=="0.1.false" (
+						set /a prevButtonMouseClick=0,mouseClick=0,scriptCount+=1
+						set /a pid!scriptCount!_lineCount=1,pid!scriptCount!_execLine=0,pid!scriptCount!_sleepTicks=0
+						set pid!scriptCount!_l1=!obj%%a_onClick!
+						set pid!scriptCount!_path=TEMP
+					)
+					set /a prevButtonMouseClick=mouseClick
+				)
+
+			) else if "!obj%%a_type!"=="text" (
+				if NOT "!obj%%a_textLabel!.!staticText!"=="!obj%%a_prevTextLabel!.true" (
+					set obj%%a_prevTextLabel=!obj%%a_textLabel!
+					set /a num1=0
+					for /l %%b in (!obj%%a_ypos!,1,!obj%%a_endYpos!) do if defined d%%b (
+						set /a num1+=1,num2=obj%%a_xpos-1,num3=num2+obj%%a_dLength
+						for /f "tokens=1-3 delims= " %%c in ("!num2! !num1! !num3!") do set d%%b=!d%%b:~0,%%c!!obj%%a_dl%%d!!d%%b:~%%e!
+					)
+				)
+
+			) else if "!obj%%a_type!"=="viewport" (
+				set /a num1=-1
+				for /l %%b in (1,1,!objectCount!) do if "!obj%%b_name!"=="!obj%%a_focusObject!" set /a num1=%%b
+				if NOT "!num1!"=="-1" (
+					set /a num2=obj%%a_width/2,obj%%a_viewXpos=obj!num1!_xpos-num2+4,num2=obj%%a_height/2,obj%%a_viewYpos=obj!num1!_ypos-num2+4
+					if !obj%%a_viewXpos! LEQ 1 (
+						set /a obj%%a_viewXpos=1
+					) else (
+						set /a num2=levelEndX-obj%%a_width+1
+						if !obj%%a_viewXpos! GEQ !num2! set /a obj%%a_viewXpos=num2
+					)
+					if !obj%%a_viewYpos! LEQ 1 (
+						set /a obj%%a_viewYpos=1
+					) else (
+						set /a num2=levelEndY-obj%%a_height+1
+						if !obj%%a_viewYpos! GEQ !num2! set /a obj%%a_viewYpos=num2
+					)
+				)
+
+				set /a num1=obj%%a_ypos+obj%%a_height-1,num2=obj%%a_xpos-1,num3=obj%%a_width,num4=88-num2-num3,num4=88-num4,num5=obj%%a_viewXpos-1
+				for /f "tokens=1-4 delims= " %%c in ("!num2! !num3! !num4! !num5!") do for /l %%b in (!obj%%a_ypos!,1,!num1!) do (
+					set /a num6=%%b+obj%%a_viewYpos-1
+					for %%g in (!num6!) do set d%%b=!d%%b:~0,%%c!!lrb_l%%g:~%%f,%%d!!d%%b:~%%e!
+				)
 			)
+		)
 		for /l %%a in (1,1,!objectCount!) do (
 			if "!obj%%a_type!"=="dummy" (
 				if "!obj%%a_playerController!"=="sideScroller" (
