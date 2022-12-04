@@ -1,8 +1,11 @@
 screenEffect 0 short
-waitForEffects
 
-loadLevel c1m1.dat
-renderLevel c1m1.dat
+random 1 4
+set bgMap=$result
+
+unloadLevel
+loadLevel c1m$bgMap.dat
+renderLevel c1m$bgMap.dat
 if bgX == NUL (
 	loadGlobalObject viewport.yss
 )
@@ -12,16 +15,13 @@ set bgX=1
 set bgY=1
 
 screenEffect 200 short
-endFrame
 
 :main
 set bgX=$bgX+2
 modifyObjectProperty viewport viewXpos=$bgX
-if bgX == 201+2 (
+if bgX == 141+2 (
 	screenEffect 0 short
-	waitForEffects
-	startScript mainMenuBackground.yss
-	exit
+	startScript restartMainMenuBackground.yss
 )
 endFrame
 goto :main

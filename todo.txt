@@ -8,7 +8,6 @@ find alternatve solution to needing to sleep for 1 tick after "goto" or "gotoRet
 allow for dynamic resizing
 engineProperty for DHRM
 only allow letters in property names in the getObjectProperty function
-checkCollision function
 go over every call to checkString
 cache sprite safety
 cache level safety

@@ -7,11 +7,13 @@ cd ..
 call newEngine\scripts\init.bat
 color 70
 
-set level=c1m3.dat
+set level=c1m4.dat
 
 :loadLevel
+echo loading...
 set exec=loadLevel !level!
 call newEngine\scripts\ic-loadLevel.bat
+echo rendering...
 set exec=renderLevel !level!
 call newEngine\scripts\ic-renderLevel.bat
 
@@ -85,10 +87,11 @@ for /l %%. in (1,1,2999) do (
 goto :main
 
 :saveLevel
+echo saving...
 if exist newEngineProject\levels\backup.dat del newEngineProject\levels\backup.dat
 copy newEngineProject\levels\!level! newEngineProject\levels\backup.dat >nul
 del newEngineProject\levels\!level!
-for /l %%a in (1,1,11) do for /l %%b in (1,1,100) do (
+for /l %%a in (1,1,100) do for /l %%b in (1,1,100) do (
 	set /a offset=%%a-1
 	for %%c in (!offset!) do if "!lcm_l%%b:~%%c,1!"=="0" echo.tile:genericSolid.dat:%%a:%%b >>newEngineProject\levels\!level!
 	for %%c in (!offset!) do if "!lcm_l%%b:~%%c,1!"=="1" echo.tile:genericSpike.dat:%%a:%%b >>newEngineProject\levels\!level!

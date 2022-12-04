@@ -24,5 +24,4 @@ for /f "tokens=2-3 delims= " %%e in ("!exec!") do (
 	set /a getRandom=!random!*getRandomRange/32768+%%e
 	set /a rtVar_result=getRandom
 )
-
 exit /b 0

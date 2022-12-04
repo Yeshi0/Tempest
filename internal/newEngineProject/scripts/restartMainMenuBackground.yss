@@ -1,0 +1,3 @@
+waitForEffects
+killScript mainMenuBackground.yss
+startScript mainMenuBackground.yss
