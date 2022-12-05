@@ -1,3 +1,5 @@
+killScript switchSceneFade.yss
+
 if startArgument == noReload (
 	goto :main
 )
