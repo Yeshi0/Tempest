@@ -95,7 +95,7 @@ for /l %%. in (1,1,2999) do (
 		set /a dispTimer-=csPerFrame,fpsFrames+=1
 		if !dispTimer! GEQ !csPerFrame! set /a dispTimer=0
 		<nul set /p=[1;1H[48;2;!screenColor!;!screenColor!;!screenColor!m
-		for /l %%a in (56,-1,1) do set d=!d!!d%%a:~0,88!
+		for /l %%a in (56,-1,1) do set d=!d!!d%%a!
 		echo.!d!
 		set d=
 	)
