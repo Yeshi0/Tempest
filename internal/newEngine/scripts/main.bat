@@ -163,6 +163,17 @@ for /l %%. in (1,1,2999) do (
 									set stopExec=true
 									if defined screenEffect set /a pid%%a_execLine-=1
 
+								) else if "%%c"=="checkCollision" (
+									for /f "tokens=2-3 delims= " %%d in ("!exec!") do (
+										for /f "tokens=1-2 delims=:" %%g in ("%%e") do (
+											if "%%g"=="tileGroup" (
+												for /l %%i in (1,1,!objectCount!) do if "!obj%%i_name!"=="%%d" (
+													if "!obj%%i_collisionList!"=="!obj%%i_collisionList:-%%h-=§!" set pid%%a_skipUntilParenthesis=true
+												)
+											)
+										)
+									)
+
 								) else if "%%c"=="if" (
 									set pid%%a_skipUntilParenthesis=true
 									set /a pid%%a_ifStartLine=pid%%a_execLine
@@ -236,17 +247,6 @@ for /l %%. in (1,1,2999) do (
 								) else if "%%c"=="modifyObjectProperty" (
 									for /f "tokens=2-3 delims= " %%d in ("!exec!") do for /l %%f in (1,1,!objectCount!) do if "%%d"=="!obj%%f_name!" (
 										for /f "tokens=1-2 delims==" %%g in ("%%e") do set obj%%f_%%g=%%h
-									)
-
-								) else if "%%c"=="checkCollision" (
-									for /f "tokens=2-3 delims= " %%d in ("!exec!") do (
-										for /f "tokens=1-2 delims=:" %%g in ("%%e") do (
-											if "%%g"=="tileGroup" (
-												for /l %%i in (1,1,!objectCount!) do if "!obj%%i_name!"=="%%d" (
-													if "!obj%%i_collisionList!"=="!obj%%i_collisionList:-%%h-=§!" set pid%%a_skipUntilParenthesis=true
-												)
-											)
-										)
 									)
 
 								) else if exist newEngine\scripts\ic-%%c.bat (
