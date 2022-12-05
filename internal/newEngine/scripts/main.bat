@@ -95,7 +95,9 @@ for /l %%. in (1,1,2999) do (
 		set /a dispTimer-=csPerFrame,fpsFrames+=1
 		if !dispTimer! GEQ !csPerFrame! set /a dispTimer=0
 		<nul set /p=[1;1H[48;2;!screenColor!;!screenColor!;!screenColor!m
-		for /l %%a in (56,-1,1) do echo(!d%%a:~0,88!
+		for /l %%a in (56,-1,1) do set d=!d!!d%%a:~0,88!
+		echo.!d!
+		set d=
 	)
 
 	if !tpsTimer! GEQ 50 set /a tpsTimer=0
@@ -163,6 +165,10 @@ for /l %%. in (1,1,2999) do (
 									set stopExec=true
 									if defined screenEffect set /a pid%%a_execLine-=1
 
+								) else if "%%c"=="endFrame" (
+									set foundEndFrame=true
+									set stopExec=true
+
 								) else if "%%c"=="checkCollision" (
 									for /f "tokens=2-3 delims= " %%d in ("!exec!") do (
 										for /f "tokens=1-2 delims=:" %%g in ("%%e") do (
@@ -227,10 +233,6 @@ for /l %%. in (1,1,2999) do (
 										)
 									)
 
-								) else if "%%c"=="endFrame" (
-									set foundEndFrame=true
-									set stopExec=true
-
 								) else if "%%c"=="goto" (
 									if defined pid%%a_gotoCache_l!pid%%a_execLine! (
 										set /a gotoLine=pid%%a_gotoCache_l!pid%%a_execLine!
@@ -251,6 +253,7 @@ for /l %%. in (1,1,2999) do (
 
 								) else if exist newEngine\scripts\ic-%%c.bat (
 									set /a currentPid=%%a
+									title !time!
 									call newEngine\scripts\ic-%%c.bat
 								)
 							)
@@ -468,10 +471,10 @@ for /l %%. in (1,1,2999) do (
 					for /l %%b in (1,1,!objectCount!) do if "!obj%%b_name!"=="!obj%%a_renderInto!" if "!obj%%b_type!"=="viewport" set /a num1=%%b
 					if NOT "!num1!"=="-1" (
 						set /a num2=obj%%a_xpos-obj!num1!_viewXpos+1,num3=obj%%a_ypos-obj!num1!_viewYpos+1,num4=num3+7,num5=0,num6=num2-1,num7=num6+8
-						for /l %%b in (!num3!,1,!num4!) do (
+						for /f "tokens=1-3 delims= " %%c in ("!num1! !num6! !num7!") do for /l %%f in (!num3!,1,!num4!) do (
 							set /a num5+=1,num8=num5*8-8,num8=obj!num1!_height-num8
-							for /f "tokens=1-5 delims= " %%c in ("!num6! !num5! !num7! !num1! !num8!") do (
-								set d%%b=!d%%b:~0,%%c!!obj%%a_spriteContent:~%%g,8!!d%%b:~%%e!
+							for /f "tokens=1-2 delims= " %%g in ("!num5! !num8!") do (
+								set d%%f=!d%%f:~0,%%d!!obj%%a_spriteContent:~%%h,8!!d%%f:~%%e!
 							)
 						)
 					)
