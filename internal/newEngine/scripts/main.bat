@@ -63,7 +63,7 @@ for /l %%. in (1,1,2999) do (
 		) else (
 			set dispKeyPressed=0
 			if defined keyPressed set dispKeyPressed=!keyPressed!
-			title !persistent_engineRuntimeVersion! RT ^| FPS: !fpsFinal!/!maxFps! ^(!tpsFinal!/!maxTps!^) ^| OBJ: !objectCount! ^| YSS: !scriptCount! ^(LPS: !yssLinesFinal!^) ^| Press {BACKSPACE} to show dev console.
+			title !persistent_engineRuntimeVersion! RT ^| FPS: !fpsFinal!/!maxFps! ^(!tpsFinal!/!maxTps!^) ^| OBJ: !objectCount! ^| YSS: !scriptCount! ^(LPS: !yssLinesFinal!^) ^| !pid1_linesLastTick!
 		)
 
 		if "!exitGame!"=="true" exit /b 0
@@ -109,10 +109,13 @@ for /l %%. in (1,1,2999) do (
 
 			) else (
 				set stopExec=false
-				for /l %%z in (1,1,!pid%%a_lineCount!) do if NOT "!stopExec!"=="true" (
-					set /a pid%%a_execLine+=1
+				set foundEndFrame=false
+				set /a pid%%a_linesLastTick=pid%%a_linesThisTick,pid%%a_linesThisTick=0
+				for /l %%z in (1,1,!pid%%a_linesLastTick!) do if NOT "!stopExec!"=="true" (
+					set /a pid%%a_linesThisTick+=1,pid%%a_execLine+=1
 					for %%b in (!pid%%a_execLine!) do (
 						set exec=!pid%%a_l%%b!
+						rem move this later
 						if "!pid%%a_skipUntilParenthesis!"=="true" (
 							for /f "tokens=1 delims= " %%c in ("!exec!") do if "%%c"==")" (
 								set pid%%a_skipUntilParenthesis=false
@@ -214,6 +217,7 @@ for /l %%. in (1,1,2999) do (
 									)
 
 								) else if "%%c"=="endFrame" (
+									set foundEndFrame=true
 									set stopExec=true
 
 								) else if "%%c"=="goto" (
@@ -253,6 +257,10 @@ for /l %%. in (1,1,2999) do (
 						)
 					)
 				)
+				if NOT "!foundEndFrame!"=="true" (
+					set foundEndFrame=
+					set /a pid%%a_linesThisTick=maxLinesPerFrame
+				)
 				if !pid%%a_execLine! GEQ !pid%%a_lineCount! call newEngine\scripts\scriptManager.bat kill %%a
 			)
 		)
@@ -280,7 +288,7 @@ for /l %%. in (1,1,2999) do (
 				if "!obj%%a_hover!"=="true" (
 					if "!mouseClick!.!prevButtonMouseClick!.!buttonsDisabled!"=="0.1.false" (
 						set /a prevButtonMouseClick=0,mouseClick=0,scriptCount+=1
-						set /a pid!scriptCount!_lineCount=1,pid!scriptCount!_execLine=0,pid!scriptCount!_sleepTicks=0
+						set /a pid!scriptCount!_lineCount=1,pid!scriptCount!_execLine=0,pid!scriptCount!_sleepTicks=0,pid!scriptCount!_linesThisTick=maxLinesPerFrame
 						set pid!scriptCount!_l1=!obj%%a_onClick!
 						set pid!scriptCount!_path=TEMP
 					)

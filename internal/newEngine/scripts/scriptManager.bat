@@ -24,6 +24,7 @@ if "%1"=="start" (
 	set pid!newPid!_name=%~nx2
 	set pid!newPid!_skipUntilParenthesis=false
 	set /a pid!newPid!_execLine=0
+	set /a pid!newPid!_linesThisTick=maxLinesPerFrame
 	set /a pid!newPid!_sleepTicks=0
 	set "startArgument=%~3"
 	if NOT "!startArgument!"=="" (

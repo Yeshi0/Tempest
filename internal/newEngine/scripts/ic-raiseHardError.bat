@@ -74,6 +74,7 @@ echo.  scriptCount: !scriptCount! >>memoryDump.txt
 for /l %%a in (1,1,!scriptCount!) do (
 	echo. >>memoryDump.txt
 	echo.  pid%%a: >>memoryDump.txt
+	echo.    execCount: !pid%%a_linesLastTick! >>memoryDump.txt
 	echo.    execLine: !pid%%a_execLine! >>memoryDump.txt
 	echo.    lineCount: !pid%%a_lineCount! >>memoryDump.txt
 	echo.    name: !pid%%a_name! >>memoryDump.txt

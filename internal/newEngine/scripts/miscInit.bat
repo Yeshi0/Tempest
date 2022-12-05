@@ -20,4 +20,5 @@ set staticButtons=true
 set staticText=true
 set /a yssLinesExecuted=0
 set cp=)
+set repeat=for /l %%%. in (1,1,100) do (
 exit /b 0
