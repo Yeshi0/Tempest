@@ -4,12 +4,15 @@ setLocal enableDelayedExpansion
 cd ..
 cd ..
 cd ..
+
+:init
 call newEngine\scripts\init.bat
 color 70
 
-set level=c1m4.dat
+set level=c1m1.dat
 
 :loadLevel
+color 70
 echo loading...
 set exec=loadLevel !level!
 call newEngine\scripts\ic-loadLevel.bat
@@ -19,6 +22,7 @@ call newEngine\scripts\ic-renderLevel.bat
 
 set /a cameraXpos=1
 set /a cameraYpos=1
+set /a objId=1
 
 :main
 for /l %%. in (1,1,2999) do (
@@ -53,6 +57,7 @@ for /l %%. in (1,1,2999) do (
 	set /a fpsFrames+=1
 
 	if defined keys (
+		if NOT "!keys!"=="!keys:-9-=§!" set /p objId=obj id: 
 		if NOT "!keys!"=="!keys:-65-=§!" set /a cameraXpos-=2
 		if NOT "!keys!"=="!keys:-68-=§!" set /a cameraXpos+=2
 		if NOT "!keys!"=="!keys:-83-=§!" set /a cameraYpos-=2
@@ -61,11 +66,11 @@ for /l %%. in (1,1,2999) do (
 			if NOT "!keys!"=="!keys:-83-=§!" (
 				call :saveLevel
 				set exec=renderLevel !level!
-				call newEngine\scripts\ic-renderLevel.bat
+				goto :loadLevel
 			)
 			if NOT "!keys!"=="!keys:-82-=§!" (
 				call :saveLevel
-				goto :loadLevel
+				goto :init
 			)
 		)
 	)
@@ -77,7 +82,7 @@ for /l %%. in (1,1,2999) do (
 
 	if "!mouseClick!"=="1" (
 		set /a offset=hoverTileX-1
-		for /f "tokens=1-3 delims= " %%a in ("!hoverTileX! !hoverTileY! !offset!") do set lcm_l%%b=!lcm_l%%b:~0,%%c!1!lcm_l%%b:~%%a!
+		for /f "tokens=1-3 delims= " %%a in ("!hoverTileX! !hoverTileY! !offset!") do set lcm_l%%b=!lcm_l%%b:~0,%%c!!objId!!lcm_l%%b:~%%a!
 	)
 	if "!mouseClick!"=="2" (
 		set /a offset=hoverTileX-1
