@@ -32,8 +32,15 @@ for %%a in (
 	set initCurrent=!initCurrent:_= !
 	for /f "tokens=1-2 delims=:" %%b in ("!initCurrent!") do (
 		echo.[54;3H                                                                                        [54;3H%%c
-		call newEngine\scripts\%%b
-		call newEngine\scripts\wait.bat 10
+		set skipInit=false
+		if "%%b"=="discordRpcDefault.dll" if NOT "!useDiscordRPC!"=="true" set skipInit=true
+		if "!skipInit!"=="false" (
+			call newEngine\scripts\%%b
+			call newEngine\scripts\wait.bat 10
+		) else (
+			echo.[54;3H                                                                                        [54;3H%%c - Disabled, skipping...
+			call newEngine\scripts\wait.bat 50
+		)
 	)
 )
 
@@ -47,8 +54,13 @@ for %%a in (
 		echo.[54;3H                                                                                        [54;3H%%c
 		set skipInject=false
 		if "%%b"=="discordRPC.dll" if NOT "!useDiscordRPC!"=="true" set skipInject=true
-		if "!skipInject!"=="false" newEngine\exe\inject.exe newEngine\exe\%%b
-		call newEngine\scripts\wait.bat 10
+		if "!skipInject!"=="false" (
+			newEngine\exe\inject.exe newEngine\exe\%%b
+			call newEngine\scripts\wait.bat 10
+		) else (
+			echo.[54;3H                                                                                        [54;3H%%c - Disabled, skipping...
+			call newEngine\scripts\wait.bat 50
+		)
 	)
 )
 
