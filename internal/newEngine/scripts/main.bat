@@ -117,14 +117,6 @@ for /l %%. in (1,1,2999) do (
 					set /a pid%%a_linesThisTick+=1,pid%%a_execLine+=1
 					for %%b in (!pid%%a_execLine!) do (
 						set exec=!pid%%a_l%%b!
-						rem move this later
-						if "!pid%%a_skipUntilParenthesis!"=="true" (
-							for /f "tokens=1 delims= " %%c in ("!exec!") do if "%%c"==")" (
-								set pid%%a_skipUntilParenthesis=false
-								set /a pid%%a_supc_l!pid%%a_ifStartLine!=pid%%a_execLine
-							)
-
-						) else (
 							set /a yssLinesExecuted+=1
 							if NOT "!exec!"=="!exec:$=hasVariable!" (
 								if defined pid%%a_vo_l!pid%%a_execLine! (
@@ -174,7 +166,17 @@ for /l %%. in (1,1,2999) do (
 										for /f "tokens=1-2 delims=:" %%g in ("%%e") do (
 											if "%%g"=="tileGroup" (
 												for /l %%i in (1,1,!objectCount!) do if "!obj%%i_name!"=="%%d" (
-													if "!obj%%i_collisionList!"=="!obj%%i_collisionList:-%%h-=§!" set pid%%a_skipUntilParenthesis=true
+													if "!obj%%i_collisionList!"=="!obj%%i_collisionList:-%%h-=§!" (
+														set pid%%a_skipUntilParenthesis=true
+														if NOT defined pid%%a_supc_l!pid%%a_execLine! for /l %%d in (!pid%%a_execLine!,1,!pid%%a_lineCount!) do if "!pid%%a_skipUntilParenthesis!"=="true" for /f "tokens=1 delims= " %%e in ("!pid%%a_l%%d!") do if "%%e"==")" (
+															set pid%%a_skipUntilParenthesis=false
+															set /a pid%%a_supc_l!pid%%a_execLine!=%%d
+														)
+														if defined pid%%a_supc_l!pid%%a_execLine! (
+															set pid%%a_skipUntilParenthesis=false
+															set /a pid%%a_execLine=pid%%a_supc_l!pid%%a_execLine!
+														)
+													)
 												)
 											)
 										)
@@ -214,9 +216,15 @@ for /l %%. in (1,1,2999) do (
 											if NOT "!rtVar_%%d!"=="!rtVar_%%f!" set pid%%a_skipUntilParenthesis=false
 										)
 									)
-									if "!pid%%a_skipUntilParenthesis!"=="true" if defined pid%%a_supc_l!pid%%a_execLine! (
-										set pid%%a_skipUntilParenthesis=false
-										set /a pid%%a_execLine=pid%%a_supc_l!pid%%a_execLine!
+									if "!pid%%a_skipUntilParenthesis!"=="true" (
+										if NOT defined pid%%a_supc_l!pid%%a_execLine! for /l %%d in (!pid%%a_execLine!,1,!pid%%a_lineCount!) do if "!pid%%a_skipUntilParenthesis!"=="true" for /f "tokens=1 delims= " %%e in ("!pid%%a_l%%d!") do if "%%e"==")" (
+											set pid%%a_skipUntilParenthesis=false
+											set /a pid%%a_supc_l!pid%%a_execLine!=%%d
+										)
+										if defined pid%%a_supc_l!pid%%a_execLine! (
+											set pid%%a_skipUntilParenthesis=false
+											set /a pid%%a_execLine=pid%%a_supc_l!pid%%a_execLine!
+										)
 									)
 									if NOT "!ifSuccess!"=="true" (
 										call newEngine\scripts\scriptManager.bat kill %%a
@@ -253,11 +261,9 @@ for /l %%. in (1,1,2999) do (
 
 								) else if exist newEngine\scripts\ic-%%c.bat (
 									set /a currentPid=%%a
-									title !time!
 									call newEngine\scripts\ic-%%c.bat
 								)
 							)
-						)
 					)
 				)
 				if NOT "!foundEndFrame!"=="true" (
