@@ -72,7 +72,6 @@ for /l %%. in (1,1,2999) do (
 		set /a timer500cs-=500
 		if !timer500cs! GEQ 500 set /a timer500cs=0
 
-		set discordState=FPS: !fpsFinal!/!maxFps!
 		set discordUpdate=true
 	)
 
