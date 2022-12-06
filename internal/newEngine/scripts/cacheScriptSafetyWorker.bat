@@ -12,7 +12,7 @@ for /f "delims=" %%a in (newEngineProject\scripts\%~1) do (
 		if "!lineContent:~-1,1!"==" " set lineContent=!lineContent:~0,-1!
 		if NOT exist newEngine\cache\safe\scripts\%~1\ mkdir newEngine\cache\safe\scripts\%~1\
 		call newEngine\scripts\checkString.bat "!lineContent!" "( ) ' #" allowAsterisk allowEqual allowSpace allowTab
-		if "!stringIsSafe!"=="true" echo safe >>newEngine\cache\safe\scripts\%~1\isSafe_line!currentLine!.tmp
+		if "!stringHasUnwantedChars!"=="false" echo safe >>newEngine\cache\safe\scripts\%~1\isSafe_line!currentLine!.tmp
 	)
 )
 if exist newEngine\temp\cacheSafety\%~1 del newEngine\temp\cacheSafety\%~1

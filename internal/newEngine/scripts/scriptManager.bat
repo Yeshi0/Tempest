@@ -29,7 +29,7 @@ if "%1"=="start" (
 	set "startArgument=%~3"
 	if NOT "!startArgument!"=="" (
 		call newEngine\scripts\checkString.bat "!startArgument!" allowLetters allowNumbers
-		if NOT "!stringIsSafe!"=="true" (
+		if NOT "!stringHasUnwantedChars!"=="false" (
 			call newEngine\scripts\scriptManager.bat kill !newPid!
 			exit /b 1
 
@@ -60,7 +60,7 @@ if "%1"=="start" (
 		if NOT exist newEngine\cache\safe\%2\ mkdir newEngine\cache\safe\%2\
 		if NOT exist newEngine\cache\safe\%2\isSafe_line!currentLine!.tmp (
 			call newEngine\scripts\checkString.bat "!lineContent!" "( )" allowAsterisk allowEqual allowSpace
-			if NOT "!stringIsSafe!"=="true" (
+			if NOT "!stringHasUnwantedChars!"=="true" (
 				call newEngine\scripts\scriptManager.bat kill !newPid!
 				exit /b 1
 

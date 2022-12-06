@@ -13,7 +13,7 @@ for /f "tokens=2-3 delims= " %%d in ("!exec!") do (
 				for /f "tokens=1 delims= " %%f in (newEngineProject\saveData\%%e) do (
 					set newValue=%%f
 					call newEngine\scripts\checkString.bat "!newValue!" allowLetters allowNumbers
-					if "!stringIsSafe!.!stringHasUnwantedChars!"=="true.false" (
+					if "!stringHasUnwantedChars!"=="false" (
 						set rtVar_%%e=%%f
 						set rtVar_result=%%f
 					)

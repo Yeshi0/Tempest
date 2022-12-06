@@ -4,7 +4,7 @@ for %%a in (lcm_ lcg_) do for /f "tokens=1 delims==" %%b in ("set %%a") do set %
 
 set string1=%~1
 call newEngine\scripts\checkString.bat "!string1!" "\ ." allowNumbers allowLetters
-if NOT "!stringHasLetters!.!stringHasUnwantedChars!"=="true.false" exit /b 1
+if NOT "!stringHasUnwantedChars!.!stringHasLetters!"=="false.true" exit /b 1
 if NOT exist newEngineProject\!string1! exit /b 1
 
 for /f "tokens=1-4 delims=: " %%a in (newEngineProject\!string1!) do (
