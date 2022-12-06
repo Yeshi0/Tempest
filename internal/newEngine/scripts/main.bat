@@ -22,7 +22,6 @@ if "!nativeBatch!"=="false" (
 	echo.  Press any key to ignore this message and start anyway.
 	pause >nul
 )
-
 goto :init
 
 :halt
