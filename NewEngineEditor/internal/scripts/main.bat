@@ -64,11 +64,5 @@ for /l %%. in (1,1,2999) do (
 		echo.!d!
 		set d=
 	)
-
-	if NOT exist projects\ (
-		%error% localizedText.hardError.noProjectsFolder
-	) else (
-		break
-	)
 )
 goto :main
