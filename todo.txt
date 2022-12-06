@@ -15,3 +15,4 @@ only allow numbers in xpos/ypos
 viewport lags behind focused objects
 fix walljumping
 multi process rendering
+endFrame needed after screenEffect in cg
