@@ -160,23 +160,26 @@ for /l %%. in (1,1,2999) do (
 									set stopExec=true
 
 								) else if "%%c"=="checkCollision" (
+									set pid%%a_skipUntilParenthesis=true
 									for /f "tokens=2-3 delims= " %%d in ("!exec!") do (
 										for /f "tokens=1-2 delims=:" %%g in ("%%e") do (
 											if "%%g"=="tileGroup" (
 												for /l %%i in (1,1,!objectCount!) do if "!obj%%i_name!"=="%%d" (
-													if "!obj%%i_collisionList!"=="!obj%%i_collisionList:-%%h-=§!" (
-														set pid%%a_skipUntilParenthesis=true
-														if NOT defined pid%%a_supc_l!pid%%a_execLine! for /l %%d in (!pid%%a_execLine!,1,!pid%%a_lineCount!) do if "!pid%%a_skipUntilParenthesis!"=="true" for /f "tokens=1 delims= " %%e in ("!pid%%a_l%%d!") do if "%%e"==")" (
-															set pid%%a_skipUntilParenthesis=false
-															set /a pid%%a_supc_l!pid%%a_execLine!=%%d
-														)
-														if defined pid%%a_supc_l!pid%%a_execLine! (
-															set pid%%a_skipUntilParenthesis=false
-															set /a pid%%a_execLine=pid%%a_supc_l!pid%%a_execLine!
-														)
+													if defined obj%%i_collisionList if NOT "!obj%%i_collisionList!"=="!obj%%i_collisionList:-%%h-=§!" (
+														set pid%%a_skipUntilParenthesis=false
 													)
 												)
 											)
+										)
+									)
+									if "!pid%%a_skipUntilParenthesis!"=="true" (
+										if NOT defined pid%%a_supc_l!pid%%a_execLine! for /l %%d in (!pid%%a_execLine!,1,!pid%%a_lineCount!) do if "!pid%%a_skipUntilParenthesis!"=="true" for /f "tokens=1 delims= " %%e in ("!pid%%a_l%%d!") do if "%%e"==")" (
+											set pid%%a_skipUntilParenthesis=false
+											set /a pid%%a_supc_l!pid%%a_execLine!=%%d
+										)
+										if defined pid%%a_supc_l!pid%%a_execLine! (
+											set pid%%a_skipUntilParenthesis=false
+											set /a pid%%a_execLine=pid%%a_supc_l!pid%%a_execLine!
 										)
 									)
 
@@ -255,6 +258,11 @@ for /l %%. in (1,1,2999) do (
 								) else if "%%c"=="modifyObjectProperty" (
 									for /f "tokens=2-3 delims= " %%d in ("!exec!") do for /l %%f in (1,1,!objectCount!) do if "%%d"=="!obj%%f_name!" (
 										for /f "tokens=1-2 delims==" %%g in ("%%e") do set obj%%f_%%g=%%h
+									)
+
+								) else if "%%c"=="getObjectProperty" (
+									for /f "tokens=2-4 delims= " %%d in ("!exec!") do for /l %%e in (1,1,!objectCount!) do if "%%d"=="!obj%%e_name!" (
+										if defined obj%%e_%%f set rtVar_result=!obj%%e_%%f!
 									)
 
 								) else if exist newEngine\scripts\ic-%%c.bat (
