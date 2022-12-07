@@ -23,11 +23,11 @@ for /f "tokens=2-6 delims= " %%d in ("!exec!") do (
 			)
 			if "%%f"=="applyKeybinds" (
 				for /f "tokens=1-5 delims=:" %%i in ("%%g") do (
-					if defined kcl_%%i set obj%%a_keyUp=!kcl_%%i!
-					if defined kcl_%%j set obj%%a_keyDown=!kcl_%%j!
-					if defined kcl_%%k set obj%%a_keyLeft=!kcl_%%k!
-					if defined kcl_%%l set obj%%a_keyRight=!kcl_%%l!
-					if defined kcl_%%m set obj%%a_keyJump=!kcl_%%m!
+					if defined kcl_%%i set obj!objId!_keyUp=!kcl_%%i!
+					if defined kcl_%%j set obj!objId!_keyDown=!kcl_%%j!
+					if defined kcl_%%k set obj!objId!_keyLeft=!kcl_%%k!
+					if defined kcl_%%l set obj!objId!_keyRight=!kcl_%%l!
+					if defined kcl_%%m set obj!objId!_keyJump=!kcl_%%m!
 				)
 			)
 			if "%%f"=="applyCollision" (

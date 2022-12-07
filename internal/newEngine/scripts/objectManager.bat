@@ -179,7 +179,7 @@ if "%1"=="loadObject" (
 					for /l %%l in (0,1,!labelLength!) do if NOT "!newProperty_textLabel:~%%l,1!"=="" (
 						set /a offset1+=6
 						set /a offset2=offset1+5
-						set fontFilePath=newEngine\fonts\ne-55-c\font_§.spr
+						set fontFilePath=newEngine\fonts\ne-55-c\font_.spr
 						set shitWorkaround=!newProperty_textLabel:~%%l,1!
 						if NOT "!shitWorkaround!"==" " (
 							if exist newEngine\fonts\ne-55-c\font_!shitWorkaround!.spr set fontFilePath=newEngine\fonts\ne-55-c\font_!shitWorkaround!.spr
