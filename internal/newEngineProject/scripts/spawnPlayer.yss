@@ -7,4 +7,3 @@ modifyObjectProperty viewport focusObject=player
 
 objectManager applyLogic player applyPlayerController sideScroller
 objectManager applyLogic player applyKeybinds W:S:A:D:SPACE
-objectManager applyLogic player applyCollision solid solid

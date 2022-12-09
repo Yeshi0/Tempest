@@ -9,7 +9,9 @@ exit /b 0
 :raiseHardError
 <nul set /p=[0m[41m[97m
 
-echo.[2;2H A hard error was raised by 'scripts\!pid%currentPid%_path!'. 
+if defined raisedByEngine (
+	echo.[2;2H A hard error was raised by NewEngine Runtime. 
+) else echo.[2;2H A hard error was raised by 'scripts\!pid%currentPid%_path!'.
 echo.[3;2H Info: '!raiseHardErrorInfo!'. 
 echo.[5;2H Running scripts: 
 

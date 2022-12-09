@@ -18,8 +18,8 @@ if "%1"=="kill" (
 
 if "%1"=="loadObject" (
 	set checkObjectPath=%2
-	call newEngine\scripts\checkString.bat "!checkObjectPath!" allowSymbols
-	if NOT "!stringHasUnwantedChars!.!stringHasLetters!"=="false.true" title !time!
+	call newEngine\scripts\checkString.bat "!checkObjectPath!" allowLetters allowSymbols allowNumbers
+	if NOT "!stringHasUnwantedChars!.!stringHasLetters!"=="false.true" exit /b 1
 	set loadFrom=newEngineProject\%2
 	if NOT exist newEngineProject\!checkObjectPath! set loadFrom="%*"
 	if NOT defined loadFrom exit /b 1

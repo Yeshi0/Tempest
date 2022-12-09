@@ -19,15 +19,7 @@ for /l %%a in (0,1,!lineCharLimit!) do if NOT "!string!"=="" (
 	set /a stringLength+=1
 	set string=!string:~1!
 )
-if !stringLength! GEQ !lineCharLimit! (
-	set stringIsSafe=false
-	set charHasUnwantedChars=true
-	set checkString=
-	set allowedChars=
-	set getArgs=
-	for %%a in (allowAsterisk allowEqual allowLetters allowNumbers allowQuotationMark allowSpace allowSymbols allowTab) do set arg_%%a=
-	exit /b 1
-)
+if !stringLength! GEQ !lineCharLimit! exit /b 1
 
 set space= 
 set equal==
@@ -87,5 +79,8 @@ set quotationMark=
 set asterisk=
 set tab=
 set checkChar=
+set checkString=
+set allowedChars=
+set stringLength=
 for %%a in (allowAsterisk allowEqual allowLetters allowNumbers allowQuotationMark allowSpace allowSymbols allowTab) do set arg_%%a=
 exit /b 0

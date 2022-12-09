@@ -1,11 +1,11 @@
 set /a gotoLine=-1
 for /f "tokens=1-3 delims= " %%d in ("!exec!") do (
 	set checkLabel=%%e
-	if "!checkLabel:~20!"=="" (
+	if "!checkLabel:~25!"=="" (
 		set labelValid=true
-		for /l %%g in (1,1,20) do if NOT "!checkLabel:~%%g,1!"=="" (
+		for /l %%g in (1,1,25) do if NOT "!checkLabel:~%%g,1!"=="" (
 			set valid=false
-			for %%h in (a b c d e f g h i j k l m n o p q r s t u v w x y z) do if /i "!checkLabel:~%%g,1!"=="%%h" set valid=true
+			for %%h in (a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7 8 9 .) do if /i "!checkLabel:~%%g,1!"=="%%h" set valid=true
 			if "!valid!"=="false" set labelValid=false
 		)
 		if NOT "!checkLabel:~0,1!"==":" set labelValid=false

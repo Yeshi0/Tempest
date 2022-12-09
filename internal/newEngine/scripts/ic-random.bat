@@ -20,8 +20,10 @@ for /f "tokens=2-3 delims= " %%e in ("!exec!") do (
 		call newEngine\scripts\scriptManager.bat kill %%a
 		set stopExec=true
 	)
-	set /a getRandomRange=%%f-%%e+1
-	set /a getRandom=!random!*getRandomRange/32768+%%e
+	set /a getRandomRange=%%f-%%e
+	set /a getRandomRange+=1
+	set /a getRandom=!random!*getRandomRange/32768
+	set /a getRandom+=%%e
 	set /a rtVar_result=getRandom
 )
 exit /b 0

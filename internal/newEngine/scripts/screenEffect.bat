@@ -12,20 +12,20 @@ if defined screenEffect (
 		set checkForInvalidChars=!checkForInvalidChars:§=!
 		if "!checkForInvalidChars!"=="" (
 			set effectExists=true
-			set /a screenEffectTargetColor=screenEffect
+			set /a screenEffectStartingColor=screenColor,screenEffectTargetColor=screenEffect
 		) else set screenEffect=
 		if "!effectExists!"=="true" (
 			if !screenEffectStartingColor! GTR !screenEffectTargetColor! (
 				set /a screenColor-=diffPerTick
 				if !screenColor! LEQ !screenEffectTargetColor! (
-					set /a screenColor=screenEffectTargetColor,screenEffectStartingColor=screenColor
+					set /a screenColor=screenEffectTargetColor
 					set screenEffect=
 				)
 			)
 			if !screenEffectStartingColor! LSS !screenEffectTargetColor! (
 				set /a screenColor+=diffPerTick
 				if !screenColor! GEQ !screenEffectTargetColor! (
-					set /a screenColor=screenEffectTargetColor,screenEffectStartingColor=screenColor
+					set /a screenColor=screenEffectTargetColor
 					set screenEffect=
 				)
 			)

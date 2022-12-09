@@ -57,17 +57,8 @@ if "%1"=="start" (
 			call newEngine\scripts\scriptManager.bat kill !newPid!
 			exit /b 1
 		)
-		if NOT exist newEngine\cache\safe\%2\ mkdir newEngine\cache\safe\%2\
-		if NOT exist newEngine\cache\safe\%2\isSafe_line!currentLine!.tmp (
-			call newEngine\scripts\checkString.bat "!lineContent!" "( )" allowAsterisk allowEqual allowSpace
-			if NOT "!stringHasUnwantedChars!"=="true" (
-				call newEngine\scripts\scriptManager.bat kill !newPid!
-				exit /b 1
-
-			) else (
-				echo safe >newEngine\cache\safe\%2\isSafe_line!currentLine!.tmp
-			)
-		)
+		if NOT exist newEngine\temp\safe\%2\ mkdir newEngine\temp\safe\%2\
+		rem if NOT exist newEngine\temp\safe\%2\isSafe_line!currentLine!.tmp %rhe% CANNOT_LOAD_UNCACHED_ITEM
 	)
 	set /a pid!newPid!_lineCount=currentLine
 )

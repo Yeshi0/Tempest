@@ -56,6 +56,9 @@ for /l %%. in (1,1,2999) do (
 		set /a tpsFinal=tpsTicks,tpsTicks=0
 		set /a yssLinesFinal=yssLinesExecuted,yssLinesExecuted=0
 
+		if defined d0 for /l %%a in (-150,1,0) do set d%%a=
+		if defined d57 for /l %%a in (57,1,150) do set d%%a=
+
 		if "!debugTitlebar!"=="0" (
 			title !title! ^| Press {TAB} to toggle debug.
 
@@ -212,6 +215,14 @@ for /l %%. in (1,1,2999) do (
 											set ifSuccess=true
 											if "!rtVar_%%d!"=="!rtVar_%%f!" set pid%%a_skipUntilParenthesis=false
 
+										) else if "%%e"=="L=" (
+											set ifSuccess=true
+											if !rtVar_%%d! LEQ %%f set pid%%a_skipUntilParenthesis=false
+
+										) else if "%%e"=="G=" (
+											set ifSuccess=true
+											if !rtVar_%%d! GEQ %%f set pid%%a_skipUntilParenthesis=false
+
 										) else if "%%e"=="VX=" (
 											set ifSuccess=true
 											if NOT "!rtVar_%%d!"=="!rtVar_%%f!" set pid%%a_skipUntilParenthesis=false
@@ -257,12 +268,19 @@ for /l %%. in (1,1,2999) do (
 
 								) else if "%%c"=="modifyObjectProperty" (
 									for /f "tokens=2-3 delims= " %%d in ("!exec!") do for /l %%f in (1,1,!objectCount!) do if "%%d"=="!obj%%f_name!" (
-										for /f "tokens=1-2 delims==" %%g in ("%%e") do set obj%%f_%%g=%%h
+										for /f "tokens=1-2 delims==" %%g in ("%%e") do (
+											set obj%%f_%%g=%%h
+											if "%%g"=="sprite" (
+												call newEngine\scripts\loadSprite.bat "%%h" temp
+												set obj%%f_spriteContent=!tempSpriteContent!
+												set tempSpriteContent=
+											)
+										)
 									)
 
 								) else if "%%c"=="getObjectProperty" (
-									for /f "tokens=2-4 delims= " %%d in ("!exec!") do for /l %%e in (1,1,!objectCount!) do if "%%d"=="!obj%%e_name!" (
-										if defined obj%%e_%%f set rtVar_result=!obj%%e_%%f!
+									for /f "tokens=2-4 delims= " %%d in ("!exec!") do for /l %%g in (1,1,!objectCount!) do if "%%d"=="!obj%%g_name!" (
+										if defined obj%%g_%%e set rtVar_result=!obj%%g_%%e!
 									)
 
 								) else if exist newEngine\scripts\ic-%%c.bat (
@@ -407,12 +425,19 @@ for /l %%. in (1,1,2999) do (
 						set collisionGroupId=!lcm_l%%c:~%%b,1!
 						for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
 					)
-					if defined collisionType set obj%%a_collisionList=-!collisionType!!obj%%a_collisionList!
-					if "!collisionType!"=="solid" (
+					if defined collisionType (
+						set /a num1=ccCheckX+1
+						set obj%%a_collisionList=-!collisionType!-!collisionType!_x!num1!y!ccYpos!-!obj%%a_collisionList!-
+					)
+					set collide=false
+					if "!collisionType!"=="solid" set collide=true
+					if "!collisionType!"=="semiSolid" set collide=true
+					if "!collide!"=="true" (
 						set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX-1-ccSpeedX,ccDistY=obj%%a_ypos+1-ccDistY-ccSpeedY
-						if !ccDistX! GTR !ccDistY! (
+						if NOT "!collisionType!"=="semiSolid" if !ccDistX! GTR !ccDistY! (
 							set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos+=1,obj%%a_speedX=0
 						)
+						if "!collisionType!"=="semiSolid" if !obj%%a_speedY! GEQ -6 set /a ccDistX=9999
 						if !ccDistX! LSS !ccDistY! (
 							set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos+=1,obj%%a_speedY=0
 							set obj%%a_grounded=true
@@ -427,12 +452,19 @@ for /l %%. in (1,1,2999) do (
 						set collisionGroupId=!lcm_l%%c:~%%b,1!
 						for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
 					)
-					if defined collisionType set obj%%a_collisionList=-!collisionType!!obj%%a_collisionList!
-					if "!collisionType!"=="solid" (
+					if defined collisionType (
+						set /a num1=ccXpos+1
+						set obj%%a_collisionList=-!collisionType!-!collisionType!_x!num1!y!ccYpos!-!obj%%a_collisionList!-
+					)
+					set collide=false
+					if "!collisionType!"=="solid" set collide=true
+					if "!collisionType!"=="semiSolid" set collide=true
+					if "!collide!"=="true" (
 						set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX+1-obj%%a_speedX,ccDistX=-6-ccDistX,ccDistY=obj%%a_ypos-ccDistY+1-obj%%a_speedY-2
-						if !ccDistX! GEQ !ccDistY! (
+						if NOT "!collisionType!"=="semiSolid" if !ccDistX! GEQ !ccDistY! (
 							set /a obj%%a_xpos=ccXpos*8,obj%%a_xpos-=7,obj%%a_speedX=0
 						)
+						if "!collisionType!"=="semiSolid" if !obj%%a_speedY! GEQ -6 set /a ccDistX=9999
 						if !ccDistX! LSS !ccDistY! (
 							set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos+=1,obj%%a_speedY=0
 							set obj%%a_grounded=true
@@ -447,7 +479,10 @@ for /l %%. in (1,1,2999) do (
 						set collisionGroupId=!lcm_l%%c:~%%b,1!
 						for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
 					)
-					if defined collisionType set obj%%a_collisionList=-!collisionType!!obj%%a_collisionList!
+					if defined collisionType (
+						set /a num1=ccCheckX+1
+						set obj%%a_collisionList=-!collisionType!-!collisionType!_x!num1!y!ccCheckY!-!obj%%a_collisionList!-
+					)
 					if "!collisionType!"=="solid" (
 						set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX-ccSpeedX,ccDistY=obj%%a_ypos-ccDistY-ccSpeedY,ccDistY=-6-ccDistY
 						if !ccDistX! GTR !ccDistY! (
@@ -466,7 +501,10 @@ for /l %%. in (1,1,2999) do (
 						set collisionGroupId=!lcm_l%%c:~%%b,1!	
 						for %%d in (!collisionGroupId!) do set collisionType=!lcg_%%d!
 					)
-					if defined collisionType set obj%%a_collisionList=-!collisionType!!obj%%a_collisionList!
+					if defined collisionType (
+						set /a num1=ccXpos+1
+						set obj%%a_collisionList=-!collisionType!-!collisionType!_x!num1!y!ccCheckY!-!obj%%a_collisionList!-
+					)
 					if "!collisionType!"=="solid" (
 						set /a ccSpeedX=obj%%a_speedX/8,ccSpeedY=obj%%a_speedY/6,ccDistX=ccXpos*8,ccDistY=ccYpos*8,ccDistX=obj%%a_xpos-ccDistX+1-obj%%a_speedX,ccDistX=-6-ccDistX,ccDistY=obj%%a_ypos-ccDistY-ccSpeedY,ccDistY=-6-ccDistY
 						if !ccDistX! GEQ !ccDistY! (
@@ -476,6 +514,12 @@ for /l %%. in (1,1,2999) do (
 							set /a obj%%a_ypos=ccYpos*8,obj%%a_ypos-=7,obj%%a_speedY=0
 						)
 					)
+
+					set /a num1=levelSizeX*8-7
+					set /a num2=levelSizeY*8-7
+					if !obj%%a_xpos! LEQ 1 set /a obj%%a_xpos=1
+					if !obj%%a_xpos! GEQ !num1! set /a obj%%a_xpos=num1
+					if defined rtVar_collisions title !obj%%a_collisionList!
 				)
 
 				if "%%z"=="!ticksToExecute!" (
@@ -486,7 +530,7 @@ for /l %%. in (1,1,2999) do (
 						for /f "tokens=1-3 delims= " %%c in ("!num1! !num6! !num7!") do for /l %%f in (!num3!,1,!num4!) do (
 							set /a num5+=1,num8=num5*8-8,num8=obj!num1!_height-num8
 							for /f "tokens=1-2 delims= " %%g in ("!num5! !num8!") do (
-								set d%%f=!d%%f:~0,%%d!!obj%%a_spriteContent:~%%h,8!!d%%f:~%%e!
+								if defined d%%f set d%%f=!d%%f:~0,%%d!!obj%%a_spriteContent:~%%h,8!!d%%f:~%%e!
 							)
 						)
 					)
