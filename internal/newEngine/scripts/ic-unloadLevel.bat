@@ -3,9 +3,14 @@ if NOT defined levelSizeX (
 	exit /b 1
 )
 
-for %%a in (lcm_ lcg_ lrb_) do (
+set lcm_temp=temp
+set lcg_temp=temp
+for %%a in (lcm_ lcg_) do (
 	for /f "tokens=1 delims==" %%b in ('set %%a') do set %%b=
 )
+set /a clearEndY=levelSizeY*8
+for /l %%a in (1,1,!clearEndY!) do set al%%a=
+
 set levelSizeX=
 set levelSizeY=
 set levelEndX=

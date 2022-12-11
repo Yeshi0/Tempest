@@ -1,7 +1,8 @@
-for /l %%a in (1,1,56) do set d%%a=                                                                                        
+for /l %%a in (1,1,56) do set b%%a=                                                                                        
 set /a objectCount=0
 set /a scriptCount=0
-set /a maxLinesPerFrame=100
+set /a maxLinesPerFrame=50
+set /a addLinesPerFrame=10
 set /a lineCharLimit=200
 set halfRender=false
 set /a debugTitlebar=0
@@ -19,6 +20,4 @@ set buttonsDisabled=false
 set staticButtons=true
 set staticText=true
 set /a yssLinesExecuted=0
-set cp=)
-set repeat=for /l %%%. in (1,1,100) do (
 exit /b 0

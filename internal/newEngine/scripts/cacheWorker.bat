@@ -21,10 +21,11 @@ for /f "tokens=1 delims=" %%a in (newEngineProject\%~1) do (
 				set allowed=allowLetters allowNumbers
 			)
 			if "%%b"=="objects" (
+				set "allowedChars=§"
 				set allowed=allowLetters allowSymbols allowNumbers allowEqual allowSpace
 			)
 			if "%%b"=="scripts" (
-				set "allowedChars=( )"
+				set "allowedChars=( ) §"
 				set allowed=allowLetters allowSymbols allowNumbers allowEqual allowSpace allowTab
 			)
 			if "%%b"=="sprites" (
@@ -112,7 +113,6 @@ for /f "tokens=1 delims=" %%a in (newEngineProject\%~1) do (
 			)
 			if "!charHasUnwantedChars!"=="true" (
 				set stringHasUnwantedChars=true
-				title !time! !checkChar!
 			)
 		)
 

@@ -1,3 +1,4 @@
+set kcl_none=---999
 set kcl_backspace=8
 set kcl_tab=9
 set kcl_backspace=13

@@ -3,6 +3,7 @@ for %%a in (
 	newEngineProject\config\engineVersion.conf:allowLetters_allowNumbers_allowSymbols
 	newEngineProject\config\gameName.conf:allowLetters
 	newEngineProject\config\useDiscordRPC.conf:allowLetters
+	newEngineProject\config\hideNamesDuringInit.conf:allowLetters
 ) do (
 	set checkCurrent=%%a
 	set checkCurrent=!checkCurrent:_= !

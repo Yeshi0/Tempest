@@ -200,7 +200,7 @@ if "%1"=="loadObject" (
 				)
 			)
 			if "!newProperty_type!"=="viewport" (
-				if NOT defined lrb_l1 (
+				if NOT defined al1 (
 					call newEngine\scripts\objectManager.bat kill !newId!
 					for %%x in (newProperty_ parseProperty) do for /f "tokens=2 delims==" %%y in ('set %%a 2^>nul') do set %%y=
 					exit /b 1
@@ -219,6 +219,8 @@ if "%1"=="loadObject" (
 				set /a obj!newId!_endXpos=newEndXpos
 				set /a obj!newId!_endYpos=newEndYpos
 				set obj!newId!_focusObject=!newProperty_focusObject!
+				set obj!newId!_fsvp=false
+				for %%x in (!newId!) do if "!obj%%x_xpos!.!obj%%x_ypos!.!obj%%x_width!.!obj%%x_height!"=="1.1.88.56" set obj%%x_fsvp=true
 			)
 			if "!newProperty_type!"=="dummy" (
 				set /a obj!newId!_xpos=newProperty_xpos

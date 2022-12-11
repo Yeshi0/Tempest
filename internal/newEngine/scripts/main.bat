@@ -56,8 +56,8 @@ for /l %%. in (1,1,2999) do (
 		set /a tpsFinal=tpsTicks,tpsTicks=0
 		set /a yssLinesFinal=yssLinesExecuted,yssLinesExecuted=0
 
-		if defined d0 for /l %%a in (-150,1,0) do set d%%a=
-		if defined d57 for /l %%a in (57,1,150) do set d%%a=
+		if defined b0 for /l %%a in (-150,1,0) do set b%%a=
+		if defined b57 for /l %%a in (57,1,150) do set b%%a=
 
 		if "!debugTitlebar!"=="0" (
 			title !title! ^| Press {TAB} to toggle debug.
@@ -65,7 +65,7 @@ for /l %%. in (1,1,2999) do (
 		) else (
 			set dispKeyPressed=0
 			if defined keyPressed set dispKeyPressed=!keyPressed!
-			title !persistent_engineRuntimeVersion! RT ^| FPS: !fpsFinal!/!maxFps! ^(!tpsFinal!/!maxTps!^) ^| OBJ: !objectCount! ^| YSS: !scriptCount! ^(LPS: !yssLinesFinal!^) ^| !pid1_linesLastTick!
+			title !persistent_engineRuntimeVersion! RT ^| FPS: !fpsFinal!/!maxFps! ^(!tpsFinal!/!maxTps!^) ^| OBJ: !objectCount! ^| YSS: !scriptCount! ^(LPS: !yssLinesFinal!^)
 		)
 
 		if "!exitGame!"=="true" exit /b 0
@@ -96,9 +96,7 @@ for /l %%. in (1,1,2999) do (
 		set /a dispTimer-=csPerFrame,fpsFrames+=1
 		if !dispTimer! GEQ !csPerFrame! set /a dispTimer=0
 		<nul set /p=[1;1H[48;2;!screenColor!;!screenColor!;!screenColor!m
-		for /l %%a in (56,-1,1) do set d=!d!!d%%a:~0,88!
-		echo.!d!
-		set d=
+		for /l %%a in (56,-1,1) do echo(!b%%a:~0,88!
 	)
 
 	if !tpsTimer! GEQ 50 set /a tpsTimer=0
@@ -113,186 +111,186 @@ for /l %%. in (1,1,2999) do (
 			) else (
 				set stopExec=false
 				set foundEndFrame=false
-				set /a pid%%a_linesLastTick=pid%%a_linesThisTick,pid%%a_linesThisTick=0
+				set /a pid%%a_linesLastTick=pid%%a_linesThisTick+3,pid%%a_linesThisTick=0
 				for /l %%z in (1,1,!pid%%a_linesLastTick!) do if NOT "!stopExec!"=="true" (
 					set /a pid%%a_linesThisTick+=1,pid%%a_execLine+=1
 					for %%b in (!pid%%a_execLine!) do (
 						set exec=!pid%%a_l%%b!
-							set /a yssLinesExecuted+=1
-							if NOT "!exec!"=="!exec:$=hasVariable!" (
-								if defined pid%%a_vo_l!pid%%a_execLine! (
-									set /a variableOffset=pid%%a_vo_l%%b,variableLength=pid%%a_vl_l%%b
-									set variableName=!pid%%a_vn_l%%b!
+						set /a yssLinesExecuted+=1
+						if NOT "!exec!"=="!exec:$=hasVariable!" (
+							if defined pid%%a_vo_l!pid%%a_execLine! (
+								set /a variableOffset=pid%%a_vo_l%%b,variableLength=pid%%a_vl_l%%b
+								set variableName=!pid%%a_vn_l%%b!
 
-								) else (
+							) else (
+								set /a currentPid=%%a,currentLine=%%b
+								call newEngine\scripts\variableExpansionCache.bat
+							)
+							set /a variableNameEnd=variableLength+variableOffset+1
+							for /f "tokens=1-3 delims= " %%d in ("!variableOffset! !variableLength! !variableNameEnd!") do (
+								if defined pid%%a_oc_l%%b (
+									set /a rtVar_!variableName!!pid%%a_oc_l%%b!=pid%%a_on_l%%b
+
+								) else if NOT defined pid%%a_cm_l%%b (
 									set /a currentPid=%%a,currentLine=%%b
-									call newEngine\scripts\variableExpansionCache.bat
+									call newEngine\scripts\variableMathOperationCache.bat
 								)
-								set /a variableNameEnd=variableLength+variableOffset+1
-								for /f "tokens=1-3 delims= " %%d in ("!variableOffset! !variableLength! !variableNameEnd!") do (
-									if defined pid%%a_oc_l%%b (
-										set /a rtVar_!variableName!!pid%%a_oc_l%%b!=pid%%a_on_l%%b
-
-									) else if NOT defined pid%%a_cm_l%%b (
-										set /a currentPid=%%a,currentLine=%%b
-										call newEngine\scripts\variableMathOperationCache.bat
-									)
-									for %%g in (!variableName!) do (
-										if NOT defined number (
-											set /a offset=variableLength+variableOffset
-											for %%h in (!offset!) do (
-												set exec=!exec:~0,%%d!!rtVar_%%g!!exec:~%%h!
-											)
-										) else set exec=!exec:~0,%%d!!rtVar_%%g!
-									)
-									set checkExec=!exec:$=hasVariable!
-									if NOT "!exec!"=="!checkExec!" (
-										call newEngine\scripts\scriptManager.bat kill %%a
-										set stopExec=true
-									)
+								for %%g in (!variableName!) do (
+									if NOT defined number (
+										set /a offset=variableLength+variableOffset
+										for %%h in (!offset!) do (
+											set exec=!exec:~0,%%d!!rtVar_%%g!!exec:~%%h!
+										)
+									) else set exec=!exec:~0,%%d!!rtVar_%%g!
+								)
+								set checkExec=!exec:$=hasVariable!
+								if NOT "!exec!"=="!checkExec!" (
+									call newEngine\scripts\scriptManager.bat kill %%a
+									set stopExec=true
 								)
 							)
+						)
 
-							for /f "tokens=1 delims= " %%c in ("!exec!") do (
-								if "%%c"=="waitForEffects" (
-									set stopExec=true
-									if defined screenEffect set /a pid%%a_execLine-=1
+						for /f "tokens=1 delims= " %%c in ("!exec!") do (
+							if "%%c"=="waitForEffects" (
+								set stopExec=true
+								if defined screenEffect set /a pid%%a_execLine-=1
 
-								) else if "%%c"=="endFrame" (
-									set foundEndFrame=true
-									set stopExec=true
+							) else if "%%c"=="endFrame" (
+								set foundEndFrame=true
+								set stopExec=true
 
-								) else if "%%c"=="checkCollision" (
-									set pid%%a_skipUntilParenthesis=true
-									for /f "tokens=2-3 delims= " %%d in ("!exec!") do (
-										for /f "tokens=1-2 delims=:" %%g in ("%%e") do (
-											if "%%g"=="tileGroup" (
-												for /l %%i in (1,1,!objectCount!) do if "!obj%%i_name!"=="%%d" (
-													if defined obj%%i_collisionList if NOT "!obj%%i_collisionList!"=="!obj%%i_collisionList:-%%h-=§!" (
-														set pid%%a_skipUntilParenthesis=false
-													)
+							) else if "%%c"=="checkCollision" (
+								set pid%%a_skipUntilParenthesis=true
+								for /f "tokens=2-3 delims= " %%d in ("!exec!") do (
+									for /f "tokens=1-2 delims=:" %%g in ("%%e") do (
+										if "%%g"=="tileGroup" (
+											for /l %%i in (1,1,!objectCount!) do if "!obj%%i_name!"=="%%d" (
+												if defined obj%%i_collisionList if NOT "!obj%%i_collisionList!"=="!obj%%i_collisionList:-%%h-=§!" (
+													set pid%%a_skipUntilParenthesis=false
 												)
 											)
 										)
 									)
-									if "!pid%%a_skipUntilParenthesis!"=="true" (
-										if NOT defined pid%%a_supc_l!pid%%a_execLine! for /l %%d in (!pid%%a_execLine!,1,!pid%%a_lineCount!) do if "!pid%%a_skipUntilParenthesis!"=="true" for /f "tokens=1 delims= " %%e in ("!pid%%a_l%%d!") do if "%%e"==")" (
-											set pid%%a_skipUntilParenthesis=false
-											set /a pid%%a_supc_l!pid%%a_execLine!=%%d
-										)
-										if defined pid%%a_supc_l!pid%%a_execLine! (
-											set pid%%a_skipUntilParenthesis=false
-											set /a pid%%a_execLine=pid%%a_supc_l!pid%%a_execLine!
-										)
-									)
-
-								) else if "%%c"=="if" (
-									set pid%%a_skipUntilParenthesis=true
-									set /a pid%%a_ifStartLine=pid%%a_execLine
-									set ifSuccess=false
-									for /f "tokens=2-4 delims= " %%d in ("!exec!") do (
-										if "%%e"=="==" (
-											if "%%d"=="keyHeld" (
-												set ifSuccess=true
-												if defined kcl_%%f for %%h in (!kcl_%%f!) do if defined keys if NOT "!keys:-%%h-=§!"=="!keys!" set pid%%a_skipUntilParenthesis=false
-
-											) else if "%%d"=="keyPressed" (
-												set ifSuccess=true
-												if defined kcl_%%f for %%h in (!kcl_%%f!) do if defined keys if NOT "!keys:-%%h-=§!"=="!keys!" if NOT "!keys!"=="!prevKeys!" set pid%%a_skipUntilParenthesis=false
-
-											) else (
-												set ifSuccess=true
-												if "!rtVar_%%d!"=="%%f" set pid%%a_skipUntilParenthesis=false
-												if "%%f"=="NUL" if NOT defined rtVar_%%d set pid%%a_skipUntilParenthesis=false
-											)
-
-										) else if "%%e"=="X=" (
-											set ifSuccess=true
-											if NOT "!rtVar_%%d!"=="%%f" set pid%%a_skipUntilParenthesis=false
-											if "%%f"=="NUL" if defined rtVar_%%d set pid%%a_skipUntilParenthesis=false
-
-										) else if "%%e"=="V=" (
-											set ifSuccess=true
-											if "!rtVar_%%d!"=="!rtVar_%%f!" set pid%%a_skipUntilParenthesis=false
-
-										) else if "%%e"=="L=" (
-											set ifSuccess=true
-											if !rtVar_%%d! LEQ %%f set pid%%a_skipUntilParenthesis=false
-
-										) else if "%%e"=="G=" (
-											set ifSuccess=true
-											if !rtVar_%%d! GEQ %%f set pid%%a_skipUntilParenthesis=false
-
-										) else if "%%e"=="VX=" (
-											set ifSuccess=true
-											if NOT "!rtVar_%%d!"=="!rtVar_%%f!" set pid%%a_skipUntilParenthesis=false
-										)
-									)
-									if "!pid%%a_skipUntilParenthesis!"=="true" (
-										if NOT defined pid%%a_supc_l!pid%%a_execLine! for /l %%d in (!pid%%a_execLine!,1,!pid%%a_lineCount!) do if "!pid%%a_skipUntilParenthesis!"=="true" for /f "tokens=1 delims= " %%e in ("!pid%%a_l%%d!") do if "%%e"==")" (
-											set pid%%a_skipUntilParenthesis=false
-											set /a pid%%a_supc_l!pid%%a_execLine!=%%d
-										)
-										if defined pid%%a_supc_l!pid%%a_execLine! (
-											set pid%%a_skipUntilParenthesis=false
-											set /a pid%%a_execLine=pid%%a_supc_l!pid%%a_execLine!
-										)
-									)
-									if NOT "!ifSuccess!"=="true" (
-										call newEngine\scripts\scriptManager.bat kill %%a
-										set stopExec=true
-									)
-
-								) else if "%%c"=="set" (
-									set string1=!exec:_==!
-									for /f "tokens=1-2 delims= " %%d in ("!string1!") do (
-										for /f "tokens=1-2 delims==" %%g in ("%%e") do (
-											if "%%h"=="NUL" (
-												set rtVar_%%g=
-											) else set rtVar_%%g=%%h
-										)
-									)
-
-								) else if "%%c"=="goto" (
-									if defined pid%%a_gotoCache_l!pid%%a_execLine! (
-										set /a gotoLine=pid%%a_gotoCache_l!pid%%a_execLine!
-
-									) else call newEngine\scripts\gotoCache.bat
-									if NOT "!gotoLine!"=="-1" (
-										set pid%%a_skipUntilParenthesis=false
-										set /a pid%%a_gotoReturn=pid%%a_execLine,pid%%a_execLine=gotoLine,pid%%a_sleepTicks=1
-									)
-
-								) else if "%%c"=="gotoReturn" (
-									set /a pid%%a_execLine=pid%%a_gotoReturn
-
-								) else if "%%c"=="modifyObjectProperty" (
-									for /f "tokens=2-3 delims= " %%d in ("!exec!") do for /l %%f in (1,1,!objectCount!) do if "%%d"=="!obj%%f_name!" (
-										for /f "tokens=1-2 delims==" %%g in ("%%e") do (
-											set obj%%f_%%g=%%h
-											if "%%g"=="sprite" (
-												call newEngine\scripts\loadSprite.bat "%%h" temp
-												set obj%%f_spriteContent=!tempSpriteContent!
-												set tempSpriteContent=
-											)
-										)
-									)
-
-								) else if "%%c"=="getObjectProperty" (
-									for /f "tokens=2-4 delims= " %%d in ("!exec!") do for /l %%g in (1,1,!objectCount!) do if "%%d"=="!obj%%g_name!" (
-										if defined obj%%g_%%e set rtVar_result=!obj%%g_%%e!
-									)
-
-								) else if exist newEngine\scripts\ic-%%c.bat (
-									set /a currentPid=%%a
-									call newEngine\scripts\ic-%%c.bat
 								)
+								if "!pid%%a_skipUntilParenthesis!"=="true" (
+									if NOT defined pid%%a_supc_l!pid%%a_execLine! for /l %%d in (!pid%%a_execLine!,1,!pid%%a_lineCount!) do if "!pid%%a_skipUntilParenthesis!"=="true" for /f "tokens=1 delims= " %%e in ("!pid%%a_l%%d!") do if "%%e"==")" (
+										set pid%%a_skipUntilParenthesis=false
+										set /a pid%%a_supc_l!pid%%a_execLine!=%%d
+									)
+									if defined pid%%a_supc_l!pid%%a_execLine! (
+										set pid%%a_skipUntilParenthesis=false
+										set /a pid%%a_execLine=pid%%a_supc_l!pid%%a_execLine!
+									)
+								)
+
+							) else if "%%c"=="if" (
+								set pid%%a_skipUntilParenthesis=true
+								set /a pid%%a_ifStartLine=pid%%a_execLine
+								set ifSuccess=false
+								for /f "tokens=2-4 delims= " %%d in ("!exec!") do (
+									if "%%e"=="==" (
+										if "%%d"=="keyHeld" (
+											set ifSuccess=true
+											if defined kcl_%%f for %%h in (!kcl_%%f!) do if defined keys if NOT "!keys:-%%h-=§!"=="!keys!" set pid%%a_skipUntilParenthesis=false
+
+										) else if "%%d"=="keyPressed" (
+											set ifSuccess=true
+											if defined kcl_%%f for %%h in (!kcl_%%f!) do if defined keys if NOT "!keys:-%%h-=§!"=="!keys!" if NOT "!keys!"=="!prevKeys!" set pid%%a_skipUntilParenthesis=false
+
+										) else (
+											set ifSuccess=true
+											if "!rtVar_%%d!"=="%%f" set pid%%a_skipUntilParenthesis=false
+											if "%%f"=="NUL" if NOT defined rtVar_%%d set pid%%a_skipUntilParenthesis=false
+										)
+
+									) else if "%%e"=="X=" (
+										set ifSuccess=true
+										if NOT "!rtVar_%%d!"=="%%f" set pid%%a_skipUntilParenthesis=false
+										if "%%f"=="NUL" if defined rtVar_%%d set pid%%a_skipUntilParenthesis=false
+
+									) else if "%%e"=="V=" (
+										set ifSuccess=true
+										if "!rtVar_%%d!"=="!rtVar_%%f!" set pid%%a_skipUntilParenthesis=false
+
+									) else if "%%e"=="L=" (
+										set ifSuccess=true
+										if defined rtVar_%%d if !rtVar_%%d! LEQ %%f set pid%%a_skipUntilParenthesis=false
+
+									) else if "%%e"=="G=" (
+										set ifSuccess=true
+										if defined rtVar_%%d if !rtVar_%%d! GEQ %%f set pid%%a_skipUntilParenthesis=false
+
+									) else if "%%e"=="VX=" (
+										set ifSuccess=true
+										if NOT "!rtVar_%%d!"=="!rtVar_%%f!" set pid%%a_skipUntilParenthesis=false
+									)
+								)
+								if "!pid%%a_skipUntilParenthesis!"=="true" (
+									if NOT defined pid%%a_supc_l!pid%%a_execLine! for /l %%d in (!pid%%a_execLine!,1,!pid%%a_lineCount!) do if "!pid%%a_skipUntilParenthesis!"=="true" for /f "tokens=1 delims= " %%e in ("!pid%%a_l%%d!") do if "%%e"==")" (
+										set pid%%a_skipUntilParenthesis=false
+										set /a pid%%a_supc_l!pid%%a_execLine!=%%d
+									)
+									if defined pid%%a_supc_l!pid%%a_execLine! (
+										set pid%%a_skipUntilParenthesis=false
+										set /a pid%%a_execLine=pid%%a_supc_l!pid%%a_execLine!
+									)
+								)
+								if NOT "!ifSuccess!"=="true" (
+									call newEngine\scripts\scriptManager.bat kill %%a
+									set stopExec=true
+								)
+
+							) else if "%%c"=="set" (
+								set string1=!exec:_==!
+								for /f "tokens=1-2 delims= " %%d in ("!string1!") do (
+									for /f "tokens=1-2 delims==" %%g in ("%%e") do (
+										if "%%h"=="NUL" (
+											set rtVar_%%g=
+										) else set rtVar_%%g=%%h
+									)
+								)
+
+							) else if "%%c"=="goto" (
+								if defined pid%%a_gotoCache_l!pid%%a_execLine! (
+									set /a gotoLine=pid%%a_gotoCache_l!pid%%a_execLine!
+
+								) else call newEngine\scripts\gotoCache.bat
+								if NOT "!gotoLine!"=="-1" (
+									set pid%%a_skipUntilParenthesis=false
+									set /a pid%%a_gotoReturn=pid%%a_execLine,pid%%a_execLine=gotoLine,pid%%a_sleepTicks=1
+								)
+
+							) else if "%%c"=="gotoReturn" (
+								set /a pid%%a_execLine=pid%%a_gotoReturn
+
+							) else if "%%c"=="modifyObjectProperty" (
+								for /f "tokens=2-3 delims= " %%d in ("!exec!") do for /l %%f in (1,1,!objectCount!) do if "%%d"=="!obj%%f_name!" (
+									for /f "tokens=1-2 delims==" %%g in ("%%e") do (
+										set obj%%f_%%g=%%h
+										if "%%g"=="sprite" (
+											call newEngine\scripts\loadSprite.bat "%%h" temp
+											set obj%%f_spriteContent=!tempSpriteContent!
+											set tempSpriteContent=
+										)
+									)
+								)
+
+							) else if "%%c"=="getObjectProperty" (
+								for /f "tokens=2-4 delims= " %%d in ("!exec!") do for /l %%g in (1,1,!objectCount!) do if "%%d"=="!obj%%g_name!" (
+									if defined obj%%g_%%e set rtVar_result=!obj%%g_%%e!
+								)
+
+							) else if exist newEngine\scripts\ic-%%c.bat (
+								set /a currentPid=%%a
+								call newEngine\scripts\ic-%%c.bat
 							)
+						)
 					)
 				)
 				if NOT "!foundEndFrame!"=="true" (
 					set foundEndFrame=
-					set /a pid%%a_linesThisTick=maxLinesPerFrame
+					set /a pid%%a_linesThisTick+=addLinesPerFrame
 				)
 				if !pid%%a_execLine! GEQ !pid%%a_lineCount! call newEngine\scripts\scriptManager.bat kill %%a
 			)
@@ -305,7 +303,7 @@ for /l %%. in (1,1,2999) do (
 				if !fixedMouseXpos! GEQ !obj%%a_xpos! if !fixedMouseXpos! LEQ !obj%%a_endXpos! if !fixedMouseYpos! GEQ !obj%%a_ypos! if !fixedMouseYpos! LEQ !obj%%a_endYpos! set obj%%a_hover=true
 				if NOT "!obj%%a_hover!.!staticButtons!"=="!obj%%a_prevHover!.true" (
 					set /a renderLine=0
-					for /l %%b in (!obj%%a_ypos!,1,!obj%%a_endYpos!) do if defined d%%b (
+					for /l %%b in (!obj%%a_ypos!,1,!obj%%a_endYpos!) do if defined b%%b (
 						set /a renderLine+=1,offset1=obj%%a_xpos-1,offset2=offset1+obj%%a_dLength
 						for /f "tokens=1-3 delims= " %%c in ("!offset1! !renderLine! !offset2!") do (
 							set new=!obj%%a_dl%%d!
@@ -314,7 +312,7 @@ for /l %%. in (1,1,2999) do (
 								set new=!new:█= !
 								set new=!new:E=█!
 							)
-							set d%%b=!d%%b:~0,%%c!!new!!d%%b:~%%e!
+							set b%%b=!b%%b:~0,%%c!!new!!b%%b:~%%e!
 						)
 					)
 				)
@@ -332,9 +330,9 @@ for /l %%. in (1,1,2999) do (
 				if NOT "!obj%%a_textLabel!.!staticText!"=="!obj%%a_prevTextLabel!.true" (
 					set obj%%a_prevTextLabel=!obj%%a_textLabel!
 					set /a num1=2,num2=obj%%a_ypos+2,num3=obj%%a_endYpos-2
-					for /l %%b in (!num2!,1,!num3!) do if defined d%%b (
+					for /l %%b in (!num2!,1,!num3!) do if defined b%%b (
 						set /a num1+=1,num2=obj%%a_xpos+2,num3=num2+obj%%a_dLength-4
-						for /f "tokens=1-3 delims= " %%c in ("!num2! !num1! !num3!") do set d%%b=!d%%b:~0,%%c!!obj%%a_dl%%d:~2,-2!!d%%b:~%%e!
+						for /f "tokens=1-3 delims= " %%c in ("!num2! !num1! !num3!") do set b%%b=!b%%b:~0,%%c!!obj%%a_dl%%d:~2,-2!!b%%b:~%%e!
 					)
 				)
 
@@ -357,10 +355,21 @@ for /l %%. in (1,1,2999) do (
 					)
 				)
 
-				set /a num1=obj%%a_ypos+obj%%a_height-1,num2=obj%%a_xpos-1,num3=obj%%a_width,num4=88-num2-num3,num4=88-num4,num5=obj%%a_viewXpos-1
-				for /f "tokens=1-4 delims= " %%c in ("!num2! !num3! !num4! !num5!") do for /l %%b in (!obj%%a_ypos!,1,!num1!) do (
-					set /a num6=%%b+obj%%a_viewYpos-1
-					for %%g in (!num6!) do set d%%b=!d%%b:~0,%%c!!lrb_l%%g:~%%f,%%d!!d%%b:~%%e!
+				if NOT "!obj%%a_fsvp!"=="true" (
+					set /a num1=obj%%a_ypos+obj%%a_height-1,num2=obj%%a_xpos-1,num3=obj%%a_width,num4=88-num2-num3,num4=88-num4,num5=obj%%a_viewXpos-1
+					for /f "tokens=1-4 delims= " %%c in ("!num2! !num3! !num4! !num5!") do for /l %%b in (!obj%%a_ypos!,1,!num1!) do (
+						set /a num6=%%b+obj%%a_viewYpos-1
+						for %%g in (!num6!) do set b%%b=!b%%b:~0,%%c!!al%%g:~%%f,%%d!!b%%b:~%%e!
+					)
+				) else (
+					set /a num1=obj%%a_viewXpos-1
+					for %%b in (!num1!) do (
+						set /a num2=57,num3=obj%%a_viewYpos+55
+						for /l %%c in (!num3!,-1,!obj%%a_viewYpos!) do (
+							set /a num2-=1
+							set b!num2!=!al%%c:~%%b,88!
+						)
+					)
 				)
 			)
 		)
@@ -400,7 +409,7 @@ for /l %%. in (1,1,2999) do (
 					) else set /a obj%%a_decreaseSpeedX=0
 				)
 
-				if "!obj%%a_playerController!"=="topDown" if "%%z"=="1" (
+				if "!obj%%a_playerController!"=="topDown" (
 					if NOT "!keys!"=="" (
 						for /f "tokens=1-5 delims= " %%b in ("!obj%%a_keyUp! !obj%%a_keyDown! !obj%%a_keyLeft! !obj%%a_keyRight! !obj%%a_keyJump!") do (
 							if NOT "!keys:-%%b-=§!"=="!keys!" set /a obj%%a_ypos+=1
@@ -524,13 +533,13 @@ for /l %%. in (1,1,2999) do (
 
 				if "%%z"=="!ticksToExecute!" (
 					set /a num1=-1
-					for /l %%b in (1,1,!objectCount!) do if "!obj%%b_name!"=="!obj%%a_renderInto!" if "!obj%%b_type!"=="viewport" set /a num1=%%b
+					for /l %%b in (1,1,!objectCount!) do if "!obj%%b_name!"=="!obj%%a_renderInto!" set /a num1=%%b
 					if NOT "!num1!"=="-1" (
-						set /a num2=obj%%a_xpos-obj!num1!_viewXpos+1,num3=obj%%a_ypos-obj!num1!_viewYpos+1,num4=num3+7,num5=0,num6=num2-1,num7=num6+8
-						for /f "tokens=1-3 delims= " %%c in ("!num1! !num6! !num7!") do for /l %%f in (!num3!,1,!num4!) do (
+						set /a num2=obj%%a_xpos-obj!num1!_viewXpos,num3=obj%%a_ypos-obj!num1!_viewYpos+1,num4=num3+7,num5=0,num7=num2+8
+						for /f "tokens=1-2 delims= " %%d in ("!num2! !num7!") do for /l %%f in (!num3!,1,!num4!) do (
 							set /a num5+=1,num8=num5*8-8,num8=obj!num1!_height-num8
 							for /f "tokens=1-2 delims= " %%g in ("!num5! !num8!") do (
-								if defined d%%f set d%%f=!d%%f:~0,%%d!!obj%%a_spriteContent:~%%h,8!!d%%f:~%%e!
+								if defined b%%f set b%%f=!b%%f:~0,%%d!!obj%%a_spriteContent:~%%h,8!!b%%f:~%%e!
 							)
 						)
 					)

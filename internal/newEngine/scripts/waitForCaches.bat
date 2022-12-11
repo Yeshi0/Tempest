@@ -10,9 +10,15 @@ for %%z in (level object script sprite tile) do (
 	for /f %%a in ('dir /b /ad newEngine\temp\caching\%%zs 2^>nul') do (
 		set /a %%zCount+=1
 		set /a totalCount+=1
-		if defined %%zs (
-			set %%zs=!%%zs!, '%%~nxa'
-		) else set %%zs='%%~nxa'
+		if "!hideNamesDuringInit!"=="false" (
+			if defined %%zs (
+				set %%zs=!%%zs!, '%%~nxa'
+			) else set %%zs='%%~nxa'
+		) else (
+			if defined %%zs (
+				set %%zs=!%%zs!, '[redacted]%%~xa'
+			) else set %%zs='[redacted]%%~xa'
+		)
 	)
 
 	echo.[!textYpos!;3H                                                                                        [!textYpos!;3HWaiting for %%z cache... ^(!%%zCount! left^)
