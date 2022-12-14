@@ -17,6 +17,7 @@ for /f "tokens=2-6 delims= " %%d in ("!exec!") do (
 				)
 				if "%%g"=="none" (
 					set obj!objId!_playerController=none
+					set obj!objId!_useCollisions=false
 					set /a obj!objId!_playerController_speedX=0
 					set /a obj!objId!_playerController_speedY=0
 				)

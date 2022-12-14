@@ -1,7 +1,7 @@
 for /f "tokens=1-2 delims= " %%a in ("!currentPid! !currentLine!") do (
 	set variableName=
 	set /a variableOffset=-1
-	for /l %%c in (0,1,%lineCharLimit%) do if "!exec:~%%c,1!"=="$" set /a variableOffset=%%c
+	for /l %%c in (0,1,!lineCharLimit!) do if "!exec:~%%c,1!"=="$" set /a variableOffset=%%c
 	if "!variableOffset!"=="-1" (
 		call newEngine\scripts\scriptManager.bat kill %%a
 		set stopExec=true
@@ -12,7 +12,7 @@ for /f "tokens=1-2 delims= " %%a in ("!currentPid! !currentLine!") do (
 			set checkVariableName=!exec:~%%d!
 			for /l %%e in (30,-1,1) do if NOT "!checkVariableName:~%%e,1!"=="" (
 				set end=true
-				for %%f in (a b c d e f g h i j k l m n o p q r s t u v w x y z) do if /i "!checkVariableName:~%%e,1!"=="%%f" set end=false
+				for %%f in (a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7 8 9) do if /i "!checkVariableName:~%%e,1!"=="%%f" set end=false
 				if "!end!"=="false" (
 					set /a checkEndOfString=%%e+1
 					for %%f in (!checkEndOfString!) do if /i "!checkVariableName:~%%f,1!"=="" set /a variableLength=%%e+1
@@ -26,6 +26,9 @@ for /f "tokens=1-2 delims= " %%a in ("!currentPid! !currentLine!") do (
 			) else (
 				set /a pid%%a_vo_l%%b=!variableOffset!
 				set /a pid%%a_vl_l%%b=!variableLength!
+				for %%e in (!variableLength!) do set pid%%a_vn_l%%b=!exec:~%%d,%%e!
+				set pid%%a_vn_l%%b=!pid%%a_vn_l%%b:~1!
+				set variableName=!pid%%a_vn_l%%b!
 			)
 		)
 	)

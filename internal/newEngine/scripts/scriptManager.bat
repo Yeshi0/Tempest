@@ -27,6 +27,11 @@ if "%1"=="start" (
 	set /a pid!newPid!_linesThisTick=maxLinesPerFrame
 	set /a pid!newPid!_sleepTicks=0
 	set "startArgument=%~3"
+	call newEngine\scripts\checkString.bat "%~2" "\ - ." allowLetters allowNumbers
+	if NOT "!stringHasLetters!.!stringHasUnwantedChars!"=="true.false" (
+		call newEngine\scripts\scriptManager.bat kill !newPid!
+		exit /b 1
+	)
 	if NOT "!startArgument!"=="" (
 		call newEngine\scripts\checkString.bat "!startArgument!" allowLetters allowNumbers
 		if NOT "!stringHasUnwantedChars!"=="false" (
@@ -40,8 +45,9 @@ if "%1"=="start" (
 		exit /b 1
 	)
 
+	%banner% "Loading script '%~nx2'..."
 	set /a currentLine=0
-	for /f "delims=" %%a in (newEngineProject\%2) do (
+	for /f "tokens=1 delims=" %%a in (newEngineProject\%2) do (
 		set /a currentLine+=1
 		set lineContent=%%a
 		if NOT "!lineContent:~199!"=="" (
@@ -57,11 +63,57 @@ if "%1"=="start" (
 			call newEngine\scripts\scriptManager.bat kill !newPid!
 			exit /b 1
 		)
-		if NOT exist newEngine\temp\safe\%2\ mkdir newEngine\temp\safe\%2\
-		rem if NOT exist newEngine\temp\safe\%2\isSafe_line!currentLine!.tmp %rhe% CANNOT_LOAD_UNCACHED_ITEM
+		for %%b in (!lineCharLimit!) do if "!lineContent:~%%b!"=="" (
+			if "!lineContent:~-1,1!"==" " set lineContent=!lineContent:~0,-1!
+			set stringIsSafe=true
+			set stringHasUnwantedChars=false
+			set "checkString=!lineContent!"
+
+			set string=!checkString!
+			set /a stringLength=0
+			for /l %%c in (0,1,!lineCharLimit!) do if NOT "!string!"=="" (
+				set /a stringLength+=1
+				set string=!string:~1!
+			)
+			if !stringLength! GEQ !lineCharLimit! %rhe% UNSAFE_RESOURCE_BLOCKED
+
+			set space= 
+			set equal==
+			set semiColon=;
+			set quotationMark=^"
+			set asterisk=*
+			set "tab=	"
+			set charIsSafe=false
+			set charHasUnwantedChars=true
+			rem this is a mess
+			if defined checkString set checkString=!checkString:^;=!
+			for %%d in (. \ $ : + - / _ ^( ^) § ¤ ' * a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9) do if defined checkString set checkString=!checkString:^%%d=!
+			if defined checkString for /f "tokens=1 delims==" %%d in ("!checkString!") do set "checkString=%%d"
+			if defined checkString set checkString=!checkString: =!
+			if NOT "!checkString!"=="" (
+				set stringIsSafe=false
+				set stringHasUnwantedChars=true
+			)
+
+			set charIsSafe=
+			set charHasUnwantedChars=
+			set space=
+			set equal=
+			set semiColon=
+			set quotationMark=
+			set asterisk=
+			set tab=
+			set checkChar=
+			set checkString=
+			set stringLength=
+			for %%c in (allowAsterisk allowEqual allowLetters allowNumbers allowQuotationMark allowSpace allowSymbols allowTab) do set arg_%%c=
+
+			if "!stringHasUnwantedChars!"=="true" %rhe% UNSAFE_RESOURCE_BLOCKED
+		) else %rhe% UNSAFE_RESOURCE_BLOCKED
 	)
 	set /a pid!newPid!_lineCount=currentLine
 )
+<nul set /p=[30m
 exit /b 0
 
 :defragmentPids

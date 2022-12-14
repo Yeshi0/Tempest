@@ -17,9 +17,10 @@ set bgY=1
 screenEffect 200 short
 
 :main
-set bgX=$bgX+2
+math $bgX+2
+set bgX=$result
 modifyObjectProperty viewport viewXpos=$bgX
-if bgX == 141+2 (
+if bgX == 141 (
 	screenEffect 0 short
 	startScript restartMainMenuBackground.yss
 )

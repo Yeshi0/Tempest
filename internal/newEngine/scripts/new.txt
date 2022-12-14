@@ -3,8 +3,8 @@
 setLocal enableDelayedExpansion
 chcp 65001 >nul
 
-call newEngine\scripts\checkString.bat "%~1" "\ - ." allowLetters allowNumbers
-if NOT "!stringHasLetters!.!stringHasUnwantedChars!"=="true.false" exit 1
+call newEngine\scripts\checkString.bat "%~1" "\ -"
+if NOT "!stringHasLetters!.!stringIsSafe!"=="true.true" exit 1
 
 if NOT exist newEngine\temp\caching\%~1\ mkdir newEngine\temp\caching\%~1
 if NOT exist newEngine\temp\safe\%~1\ mkdir newEngine\temp\safe\%~1
@@ -14,7 +14,23 @@ for /f "tokens=1 delims=\" %%b in ("%~1") do (
 		set "allowedChars=: ."
 		set allowed=allowLetters allowNumbers
 	)
+	if "%%b"=="objects" (
+		set "allowedChars=§"
+		set allowed=allowLetters allowSymbols allowNumbers allowEqual allowSpace
+	)
+	if "%%b"=="scripts" (
+		set "allowedChars=( ) §"
+		set allowed=allowLetters allowSymbols allowNumbers allowEqual allowSpace allowTab
+	)
+	if "%%b"=="sprites" (
+		set "allowedChars=. ▒ ▓ █"
+		set allowed=allowSpace
+	)
+	if "%%b"=="tiles" (
+		set allowed=allowLetters allowSymbols allowNumbers
+	)
 )
+
 for /f "tokens=1 delims=" %%a in (newEngineProject\%~1) do (
 	set /a currentLine+=1
 	set lineContent=%%a
@@ -57,17 +73,17 @@ for /f "tokens=1 delims=" %%a in (newEngineProject\%~1) do (
 		set charIsSafe=false
 		set charHasUnwantedChars=true
 		for %%d in (Asterisk QuotationMark Tab) do (
-			if "!arg_allow%%d!"=="true" for /f "tokens=1 delims=" %%e in ("!%%d!") do if defined checkString set checkString=!checkString:^%%e=!
+			if "!arg_allow%%d!"=="true" for %%e in (!%%d!) do if defined checkString set checkString=!checkString:^%%e=!
 		)
-		rem this is a mess
-		if "!arg_allowSymbols!"=="true" if defined checkString set checkString=!checkString:^;=!
+		if "!arg_allowSpace!"=="true" if defined checkString set checkString=!checkString: =!
+		set arg_allowEqual=true
+		if "!arg_allowEqual!"=="true" if defined checkString set checkString=!checkString:==!
+		if "!arg_allowSymbols!"=="true" if defined checkString set checkString=!checkString:^;=! (
 		if "!arg_allowLetters!"=="true" for %%d in (a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if defined checkString set checkString=!checkString:^%%d=!
 		if "!arg_allowSymbols!"=="true" for %%d in (. \ $ : + - / _) do if defined checkString set checkString=!checkString:^%%d=!
 		if "!arg_allowNumbers!"=="true" for %%d in (0 1 2 3 4 5 6 7 8 9) do if defined checkString set checkString=!checkString:^%%d=!
-		for %%d in (!allowedChars!) do if defined checkString set checkString=!checkString:^%%d=!
-		if "!arg_allowEqual!"=="true" if defined checkString for /f "tokens=1 delims==" %%d in ("!checkString!") do set "checkString=%%d"
-		if "!arg_allowSpace!"=="true" if defined checkString set checkString=!checkString: =!
 		if NOT "!checkString!"=="" (
+			echo # !checkString! #>>failed
 			set stringIsSafe=false
 			set stringHasUnwantedChars=true
 		)
