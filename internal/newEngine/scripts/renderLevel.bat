@@ -19,6 +19,8 @@ for /l %%a in (1,1,!num1!) do set al%%a=!string2!
 rem render level
 set /a tilesRendered=0
 for /f "tokens=1-4 delims=: " %%a in (newEngineProject\!string1!) do (
+	call newEngine\scripts\checkString.bat "%%a" allowLetters allowNumbers allowSymbols
+	if NOT "!stringHasLetters!.!stringHasUnwantedChars!"=="true.false" %rhe% UNSAFE_RESOURCE_BLOCKED
 	if NOT exist newEngineProject\tiles\%%b exit /b 1
 	for /f "tokens=1-2 delims=: " %%e in (newEngineProject\tiles\%%b) do (
 		if "%%e"=="collisionGroup" (

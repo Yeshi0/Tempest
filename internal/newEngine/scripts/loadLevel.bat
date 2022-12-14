@@ -25,6 +25,8 @@ for /l %%a in (1,1,!levelSizeX!) do set string2=!string2!
 for /l %%a in (1,1,!levelSizeY!) do set lcm_l%%a=!string2!
 
 for /f "tokens=1-4 delims=: " %%a in (newEngineProject\!string1!) do (
+	call newEngine\scripts\checkString.bat "%%a" allowLetters allowNumbers allowSymbols
+	if NOT "!stringHasLetters!.!stringHasUnwantedChars!"=="true.false" %rhe% UNSAFE_RESOURCE_BLOCKED
 	if "%%a"=="tile" (
 		if NOT exist newEngineProject\tiles\%%b exit /b 1
 		for /f "tokens=1-2 delims=: " %%e in (newEngineProject\tiles\%%b) do (

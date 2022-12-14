@@ -6,9 +6,11 @@ set tempSpriteContent=
 for /f "tokens=1 delims=." %%a in (newEngineProject\sprites\!string1!) do (
 	rem check the current line to load
 	set "lineContent=%%a"
-	if NOT defined lineContent exit /b 1
-	if "!lineContent:~7,1!"=="" exit /b 1
-	if NOT "!lineContent:~8!"=="" exit /b 1
+	call newEngine\scripts\checkString.bat "!lineContent!" "▒ ▓ █" allowSpace
+	if NOT "!stringHasUnwantedChars!"=="false" %rhe% UNSAFE_RESOURCE_BLOCKED
+	if NOT defined lineContent %rhe% UNSAFE_RESOURCE_BLOCKED
+	if "!lineContent:~7,1!"=="" %rhe% UNSAFE_RESOURCE_BLOCKED
+	if NOT "!lineContent:~8!"=="" %rhe% UNSAFE_RESOURCE_BLOCKED
 	set spriteContent=!spriteContent!!lineContent!
 )
 
